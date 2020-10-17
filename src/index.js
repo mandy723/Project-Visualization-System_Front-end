@@ -3,12 +3,14 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App/index';
 import Main from './App/component/SelectRepository';
+import ShowChart from './App/component/ShowChart';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
     {/* <App /> */}
-    <Main/>
+    {/* <Main/> */}
+    <ShowChart/>
   </React.StrictMode>,
   document.getElementById('root')
 );

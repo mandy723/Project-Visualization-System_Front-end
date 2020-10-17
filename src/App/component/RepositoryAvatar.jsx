@@ -11,6 +11,10 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
       },
     },
+    small: {
+        width: theme.spacing(10),
+        height: theme.spacing(10),
+      },
     large: {
       width: theme.spacing(20),
       height: theme.spacing(20),
@@ -22,7 +26,7 @@ export default function RepositoryAvatar(props) {
     return (
         <Box>
             <IconButton>
-                <Avatar alt="first repository" src={props.avatarUrl} className={classes.large}/>
+                <Avatar alt="first repository" src={props.avatarUrl} className={props.size == "large" ? classes.large : classes.small}/>
             </IconButton>
             <p style={{"text-align":"center"}}>{props.repositoryName}</p>
         </Box>
