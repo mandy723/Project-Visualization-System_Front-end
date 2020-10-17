@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
-import Box from '@material-ui/core/Box';
-import Drawer from '@material-ui/core/Drawer';
-import { List, ListItem, ListItemText, ListItemIcon, Button } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import MailIcon from '@material-ui/icons/Mail';
-import AddIcon from '@material-ui/icons/Add';
-import MenuIcon from '@material-ui/icons/Menu';
+import { Drawer, IconButton, List, ListItem, ListItemText, ListItemIcon } from '@material-ui/core';
+import { Add, Menu, ExitToApp } from '@material-ui/icons';
+import RepositoryAvatar from './RepositoryAvatar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,23 +21,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function RepositoryAvatar(props) {
-    const classes = useStyles();
-    return (
-        <Box>
-            <IconButton>
-                <Avatar alt="first repository" src={props.avatarUrl} className={classes.large}/>
-            </IconButton>
-            <p style={{"text-align":"center"}}>{props.repositoryName}</p>
-        </Box>
-    )
-}
 
 export default function Main() {
     const classes = useStyles();
     const [drawerState, setDrawerState] = useState(false);
-
-    // const [ repositories, setRepositories ] = useState([]);
 
     const repositories = [
         {
@@ -62,13 +44,13 @@ export default function Main() {
     return (
         <div>
             <IconButton onClick={() => {setDrawerState(true)}}>
-                <MenuIcon/>
+                <Menu/>
             </IconButton>
             <Drawer anchor="left" open={drawerState} onClose={() => setDrawerState(false)}>
                 <List>
                     <ListItem button>
                         <ListItemIcon>
-                            <MailIcon/>
+                            <ExitToApp/>
                         </ListItemIcon>
                         <ListItemText primary="Logout"/>
                     </ListItem>
@@ -79,7 +61,7 @@ export default function Main() {
                     return <RepositoryAvatar avatarUrl={repository.avatarUrl} repositoryName={repository.name}/>
                 })}
                 <IconButton color="primary" className={classes.large}>
-                    <AddIcon className={classes.small}/>
+                    <Add className={classes.small}/>
                 </IconButton>
             </div>
         </div>
