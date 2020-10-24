@@ -1,22 +1,13 @@
 import React from 'react';
-import logo from '../welcome.png';
-import './App.css';
+import { BrowserRouter } from 'react-router-dom';
+import AllRoutes from '../routes/AllRoutes';
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <label>Username</label>
-        <input type="text" id="user_name" name="uname"/>
-        
-        <label>Password</label>
-        <input type="text" id="password" name="password"/>
-        <br/>
-        <button>Login</button>
-      </header>
+    <div>
+      <BrowserRouter>
+        <AllRoutes/>
+      </BrowserRouter>
     </div>
   );
 }
-
-export default App;
