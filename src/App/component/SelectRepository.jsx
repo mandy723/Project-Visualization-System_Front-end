@@ -21,7 +21,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-
 export default function SelectorRepository() {
 	const classes = useStyles();
 
@@ -41,19 +40,17 @@ export default function SelectorRepository() {
   ]
 
   return (
-    <div>
-      <div className={classes.root}>
-        {repositories.map( repository =>
-          <RepositoryAvatar avatarUrl={repository.avatarUrl} repositoryName={repository.name} />
-        )}
-        <Card>
-          <CardActionArea>
-            <IconButton color="primary" className={classes.large}  disabled>
-              <Add className={classes.small}/>
-            </IconButton>
-          </CardActionArea>
-        </Card>
-      </div>
+    <div className={classes.root}>
+      {repositories.map( repository =>
+        <RepositoryAvatar avatarUrl={repository.avatarUrl} repositoryName={repository.name} />
+      )}
+      <Card>
+        <CardActionArea>
+          <IconButton color="primary" className={classes.large}  disabled>
+            <Add className={classes.small}/>
+          </IconButton>
+        </CardActionArea>
+      </Card>
     </div>
   )
 }

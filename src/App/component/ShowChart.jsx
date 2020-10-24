@@ -5,6 +5,8 @@ import { IconButton } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
 import RepositoryAvatar from './RepositoryAvatar';
 import ReactCommits from '../../react_commits_large.png';
+import DrawingBoard from './DrawingBoard';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,13 +24,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ShowChart() {
 	const classes = useStyles();
-
   const history = useHistory();
 
   const goToSelect = () => {
     history.push("/select")
   };
-
+  console.log("hi");
   return(
     <div>
       <IconButton onClick={goToSelect}>
@@ -44,7 +45,10 @@ export default function ShowChart() {
           <h4 >A declarative, efficient, and flexible JavaScript library for building user interfaces.</h4>
         </p>
       </div>
-      <img src={ReactCommits} alt="ReactCommits" style={{width: "70%"}}/>
+      <div style={{width: "70%"}}>
+        <DrawingBoard />
+      </div>
+      {/* <img src={ReactCommits} alt="ReactCommits" style={{width: "70%"}}/> */}
     </div>
   );
 }

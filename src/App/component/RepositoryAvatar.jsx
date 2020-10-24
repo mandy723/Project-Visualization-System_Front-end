@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
 export default function RepositoryAvatar(props) {
 	const classes = useStyles();
   const history = useHistory();
+  
   const goToShow = () => {
     history.push("/show")
   };

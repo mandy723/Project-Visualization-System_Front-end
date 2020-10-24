@@ -6,7 +6,7 @@ import './Login.css';
 export default function Login() {
   const history = useHistory();
 
-  const goToSelect =() => {
+  const goToSelect = () => {
     history.push("/select")
   };
 
