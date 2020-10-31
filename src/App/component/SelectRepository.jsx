@@ -1,6 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Card, CardActionArea, IconButton } from '@material-ui/core';
+import { 
+  Card, 
+  CardActionArea, 
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  TextField,
+  DialogActions,
+  Button
+} from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import RepositoryAvatar from './RepositoryAvatar';
 
@@ -21,8 +32,39 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+function AddRepoDialog({ open, handleClose }) {
+
+  return (
+    <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            To subscribe to the repository, please enter the repository you want to subscribe here.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Repository URL"
+            type="text"
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleClose} color="primary">
+            Subscribe
+          </Button>
+        </DialogActions>
+      </Dialog>
+  )
+}
+
 export default function SelectorRepository() {
-	const classes = useStyles();
+  const classes = useStyles();
+  const [addRepoDialogOpen, setAddRepoDialogOpen] = useState(false)
 
   const repositories = [
     {
@@ -42,15 +84,19 @@ export default function SelectorRepository() {
   return (
     <div className={classes.root}>
       {repositories.map( repository =>
-        <RepositoryAvatar avatarUrl={repository.avatarUrl} repositoryName={repository.name} />
+        <RepositoryAvatar size="large" avatarUrl={repository.avatarUrl} repositoryName={repository.name} />
       )}
       <Card>
-        <CardActionArea>
+        <CardActionArea onClick={() => setAddRepoDialogOpen(true)}>
           <IconButton color="primary" className={classes.large}  disabled>
             <Add className={classes.small}/>
           </IconButton>
         </CardActionArea>
       </Card>
+      <AddRepoDialog 
+        open={addRepoDialogOpen} 
+        handleClose={() => setAddRepoDialogOpen(false)}
+      />
     </div>
   )
 }

@@ -1,40 +1,27 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { IconButton } from '@material-ui/core';
-import { ArrowBack } from '@material-ui/icons';
+import { Card } from '@material-ui/core';
 import RepositoryAvatar from './RepositoryAvatar';
-import ReactCommits from '../../react_commits_large.png';
 import DrawingBoard from './DrawingBoard';
-
+import ChartFilter from './ChartFilter';
+import { useState } from 'react';
 
 const useStyles = makeStyles((theme) => ({
     root: {
       display: 'flex',
       '& > *': {
         margin: theme.spacing(1),
-
       },
       minWidth: '30px',
-    },
-    list: {
-      width: 200,
     },
 }));
 
 export default function ShowChart() {
 	const classes = useStyles();
-  const history = useHistory();
-
-  const goToSelect = () => {
-    history.push("/select")
-  };
-  console.log("hi");
+  const [commitVisible, setCommitVisible] = useState(true)
+  
   return(
-    <div>
-      <IconButton onClick={goToSelect}>
-        <ArrowBack/>
-      </IconButton>
+    <div style={{marginLeft:"10px"}}>
       <div className={classes.root}>
         <RepositoryAvatar 
           size = "small" 
@@ -42,13 +29,32 @@ export default function ShowChart() {
         />
         <p>
           <h2>Facebook/React</h2>
-          <h4 >A declarative, efficient, and flexible JavaScript library for building user interfaces.</h4>
+          <h3 >A declarative, efficient, and flexible JavaScript library for building user interfaces.</h3>
         </p>
       </div>
-      <div style={{width: "70%"}}>
-        <DrawingBoard />
+      <div className={classes.root}>
+        <div style={{width: "67%"}}>
+          <div hidden={!commitVisible}>
+            <h1>Team</h1>
+            <div>
+              <DrawingBoard test="group"/>
+            </div>
+            <h1>Member</h1>
+            <div>
+              <DrawingBoard test="person"/>
+            </div>
+          </div>
+          <div hidden={commitVisible}>
+            <h1>Team</h1>
+            <div>
+              <DrawingBoard test="issue"/>
+            </div>
+          </div>
+        </div>
+        <Card style={{height: "fit-content"}}>
+          <ChartFilter onTabChanged={(tabIndex) => { setCommitVisible(tabIndex===0) }}/>
+        </Card>
       </div>
-      {/* <img src={ReactCommits} alt="ReactCommits" style={{width: "70%"}}/> */}
     </div>
   );
 }

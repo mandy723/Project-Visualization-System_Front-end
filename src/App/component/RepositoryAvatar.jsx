@@ -1,9 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
-import Card from '@material-ui/core/Card';
-import { CardActionArea } from '@material-ui/core';
+import { Box, CardActionArea, Avatar } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -35,11 +33,11 @@ export default function RepositoryAvatar(props) {
   };
   
   return (
-    <Card className={classes.large}>
+    <Box className={props.size==='large' ? classes.large : classes.small}>
       <CardActionArea onClick={goToShow}>
         <Avatar alt="first repository" src={props.avatarUrl} className={classes.avatar}/>
         <p style={{"text-align":"center"}}>{props.repositoryName}</p>
       </CardActionArea>
-    </Card>
+    </Box>
   )
 }

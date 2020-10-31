@@ -5,8 +5,9 @@ import Sidebar from './Sidebar';
 export default function({ children }) {
   return (
     <div>
-      <Sidebar/>
-      {children}
+      <Sidebar>
+        {children}
+      </Sidebar>
     </div>
   )
 }
