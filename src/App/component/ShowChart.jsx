@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Card } from '@material-ui/core';
 import RepositoryAvatar from './RepositoryAvatar';
 import DrawingBoard from './DrawingBoard';
 import ChartFilter from './ChartFilter';
-import { useState } from 'react';
+import Axios from 'axios';
+import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -19,7 +20,62 @@ const useStyles = makeStyles((theme) => ({
 export default function ShowChart() {
 	const classes = useStyles();
   const [commitVisible, setCommitVisible] = useState(true)
-  
+  const [commitsData, setCommitsData] = useState([])
+  const [dataForTeamCommitChart, setDataForTeamCommitChart] = useState({ labels:[], data: { team: []} })
+  const [dataForMemberCommitChart, setDataForMemberCommitChart] = useState({ labels:[], data: {} })
+  const [startMonth, setStartMonth] = useState(moment().subtract(1, 'years').format("YYYY-MM"))
+  const [endMonth, setEndMonth] = useState(moment().format("YYYY-MM"))
+
+  useEffect(() => {
+    Axios.get("http://localhost:9100/commits/facebook/react")
+         .then((response) => {
+           setCommitsData(response.data)
+         })
+         .catch((e) => {
+           console.error(e)
+         })
+  }, [])
+
+  useEffect(() => {
+    let chartDataset = { labels:[], data: { team: []} }
+    for (let month = moment(startMonth); month <= moment(endMonth); month=month.add(1, 'months')) {
+      chartDataset.labels.push(month.format("YYYY-MM"))
+      chartDataset.data.team.push(commitsData.filter(commit=>{
+        return moment(commit.committedDate).format("YYYY-MM") == month.format("YYYY-MM")
+      }).length)
+    }
+    setDataForTeamCommitChart(chartDataset)
+  }, [commitsData])
+
+  useEffect(() => {
+    let chartDataset = {
+      labels:[],
+      data: {}
+    }
+    new Set(commitsData.map(commit=>commit.authorEmail)).forEach(author => {
+      chartDataset.data[author] = []
+    })
+    for (let month = moment(startMonth); month <= moment(endMonth); month=month.add(1, 'months')) {
+      chartDataset.labels.push(month.format("YYYY-MM"))
+      for (var key in chartDataset.data) {
+        chartDataset.data[key].push(0)
+      }
+      commitsData.forEach(commitData => {
+        if (moment(commitData.committedDate).format("YYYY-MM") == month.format("YYYY-MM")) {
+          chartDataset.data[commitData.authorEmail][chartDataset.labels.length-1] += 1
+        }
+      })
+    }
+    let temp = Object.keys(chartDataset.data).map(key => [key, chartDataset.data[key]])
+    temp.sort((first, second) => second[1].reduce((a, b)=>a+b)-first[1].reduce((a, b)=>a+b))
+    let result = {}
+    temp.slice(0, 10).forEach(x=> {
+      result[x[0]] = x[1]
+    })
+    chartDataset.data = result
+    setDataForMemberCommitChart(chartDataset)
+  }, [commitsData])
+
   return(
     <div style={{marginLeft:"10px"}}>
       <div className={classes.root}>
@@ -37,11 +93,11 @@ export default function ShowChart() {
           <div hidden={!commitVisible}>
             <h1>Team</h1>
             <div>
-              <DrawingBoard test="group"/>
+              <DrawingBoard test="group" data={dataForTeamCommitChart}/>
             </div>
             <h1>Member</h1>
             <div>
-              <DrawingBoard test="person"/>
+              <DrawingBoard test="person" data={dataForMemberCommitChart}/>
             </div>
           </div>
           <div hidden={commitVisible}>

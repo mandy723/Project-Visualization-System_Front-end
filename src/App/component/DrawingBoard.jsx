@@ -1,99 +1,40 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Line } from "react-chartjs-2";
 
-export default function DrawingBoard({test}) {
+export default function DrawingBoard(props) {
   
-    const personData = {
-      labels: [
-        "2020-01",
-        "2020-02",
-        "2020-03",
-        "2020-04",
-        "2020-05",
-        "2020-06",
-        "2020-07",
-      ],
-      datasets: [
-        {
-          label: "Tim",
-          fill: false,
-          borderColor: "rgb(255, 0, 0)",
-          borderWidth: 2,
-          pointRadius: 2,
-          data: [65, 59, 80, 81, 56, 55, 40]
-        },
-        {
-          label: "Mike",
-          fill: false,
-          borderColor: "rgb(0, 255, 0)",
-          borderWidth: 2,
-          pointRadius: 2,
-          data: [70, 32, 45, 65, 87, 92, 99]
-        },
-        {
-          label: "Jay",
-          fill: false,
-          borderColor: "blue",
-          borderWidth: 2,
-          pointRadius: 2,
-          data: [135, 91, 125, 144, 143, 143, 139]
-        }
-      ]
-    };
+    const [data, setData] = useState({})
 
-    const groupData = {
-      labels: [
-        "2020-01",
-        "2020-02",
-        "2020-03",
-        "2020-04",
-        "2020-05",
-        "2020-06",
-        "2020-07",
-      ],
-      datasets: [
-        {
-          label: "Team",
-          fill: false,
-          borderColor: "rgb(255, 0, 0)",
-          borderWidth: 1,
-          pointRadius: 2,
-          data: [270, 182, 250, 290, 286, 290, 278]
-        }
-      ]
-    };
+    const getRandomColor = () => {
+      // var letters = "0123456789ABCDEF"
+      // var color = "#"
+      // for (var i=0; i<6; i++) {
+      //   color += letters[Math.floor(Math.random()*16)]
+      // }
+      // return color
+      return `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`
+    }
 
-    const issueData = {
-      labels: [
-        "2020-01",
-        "2020-02",
-        "2020-03",
-        "2020-04",
-        "2020-05",
-        "2020-06",
-        "2020-07",
-      ],
-      datasets: [
-        {
-          label: "Reported",
-          fill: true,
-          backgroundColor: "rgba(255, 0, 0, 0.3)",
-          borderColor: "rgb(255, 0, 0)",
-          borderWidth: 2,
-          pointRadius: 2,
-          data: [0, 17, 28, 56, 79, 103, 114]
-        },
-        {
-          label: "Solved",
-          fill: true,
-          backgroundColor: "rgba(0, 0, 255, 0.7)",
-          borderColor: "rgb(0, 0, 255)",
-          borderWidth: 2,
-          pointRadius: 2,
-          data: [0, 12, 24, 40, 76, 89, 100]
-        }
-      ]
-    };
+    useEffect(() => {
+      if (props.data) {
+        console.log(props.data)
+        let datasets = Object.keys(props.data.data).map(key => {
+          return {
+            label: key,
+            fill: false,
+            borderColor: getRandomColor(),
+            borderWidth: 1,
+            pointRadius: 2,
+            data: props.data.data[key]
+          }
+        })
+
+        setData({
+          labels: props.data.labels,
+          datasets: datasets
+        })
+      }
+    }, [props.data])
   
     var options = {
       legend: {
@@ -122,7 +63,7 @@ export default function DrawingBoard({test}) {
   
     return (
       <div className="App main">
-        <Line data={test==="group" ? groupData : test==="person" ? personData : issueData} options={options} />
+        <Line data={data} options={options} />
       </div>
     );
   }
