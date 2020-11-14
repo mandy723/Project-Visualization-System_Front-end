@@ -17,7 +17,6 @@ export default function DrawingBoard(props) {
 
     useEffect(() => {
       if (props.data) {
-        console.log(props.data)
         let datasets = Object.keys(props.data.data).map(key => {
           return {
             label: key,
