@@ -29,7 +29,7 @@ export default function ShowChart() {
   const [endMonth, setEndMonth] = useState(moment().format("YYYY-MM"))
 
   useEffect(() => {
-    Axios.get("http://localhost:9100/commits/facebook/react")
+    Axios.get("http://localhost:9100/pvs-api/commits/facebook/react")
          .then((response) => {
            setCommitListData(response.data)
          })
@@ -39,7 +39,7 @@ export default function ShowChart() {
   }, [])
 
   useEffect(() => {
-    Axios.get("http://localhost:9100/issues/facebook/react")
+    Axios.get("http://localhost:9100/pvs-api/issues/facebook/react")
          .then((response) => {
            setIssueListData(response.data)
          })

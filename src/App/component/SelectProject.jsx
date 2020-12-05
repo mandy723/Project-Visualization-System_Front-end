@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import Axios from 'axios';
 import { 
   Card, 
   CardActionArea, 
@@ -14,6 +15,7 @@ import {
 } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import RepositoryAvatar from './RepositoryAvatar';
+import { useEffect } from 'react';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,58 +35,82 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AddRepoDialog({ open, handleClose }) {
-
+  const [projectName, setProjectName] = useState("")
+  const [repositoryURL, setRepositoryURL] = useState("")
+  const createProject = () => {
+    if(projectName == "" || repositoryURL == "") {
+      alert("不準啦馬的>///<")
+    } else {
+      let payload = {
+        projectName : projectName,
+        repositoryURL : repositoryURL
+      }
+      Axios.post("http://localhost:9100/pvs-api/project", payload)
+         .then((response) => {
+           handleClose()
+         })
+         .catch((e) => {
+           console.error(e)
+         }) 
+    }
+  }
   return (
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+        <DialogTitle id="form-dialog-title">Create Project</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            To subscribe to the repository, please enter the repository you want to subscribe here.
+            To create a project, please enter the project name and the repository URL you want to subscribe here.
           </DialogContentText>
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+            id="ProjectName"
+            label="Project Name"
+            type="text"
+            fullWidth
+            onChange = {(e) => {setProjectName(e.target.value)}}
+          />
+          <TextField
+            margin="dense"
+            id="RepositoryURL"
             label="Repository URL"
             type="text"
             fullWidth
+            onChange = {(e) => {setRepositoryURL(e.target.value)}}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
-            Subscribe
+          <Button onClick={createProject} color="primary">
+            Create
           </Button>
         </DialogActions>
       </Dialog>
   )
 }
 
-export default function SelectorRepository() {
+export default function SelectProject() {
   const classes = useStyles();
   const [addRepoDialogOpen, setAddRepoDialogOpen] = useState(false)
+  const [projects, setProjects] = useState([]);
 
-  const repositories = [
-    {
-      name: "facebook/react",
-      avatarUrl: "https://avatars3.githubusercontent.com/u/69631?v=4"
-    },
-    {
-      name: "angular/angular",
-      avatarUrl: "https://avatars3.githubusercontent.com/u/139426?v=4"
-    },
-    {
-      name: "vuejs/vue",
-      avatarUrl: "https://avatars1.githubusercontent.com/u/6128107?v=4"
-    }
-  ]
+  useEffect(() => {
+    Axios.get("http://localhost:9100/pvs-api/project/1")
+         .then((response) => {
+           console.log(response)
+           setProjects(response.data)
+         })
+         .catch((e) => {
+           console.error(e)
+         }) 
+  }, [])
 
   return (
     <div className={classes.root}>
-      {repositories.map( repository =>
-        <RepositoryAvatar size="large" avatarUrl={repository.avatarUrl} repositoryName={repository.name} />
+      {projects.map( repository =>
+        <RepositoryAvatar size="large" avatarUrl={repository.avatarUrl} repositoryName={repository.projectName} />
       )}
       <Card>
         <CardActionArea onClick={() => setAddRepoDialogOpen(true)}>
