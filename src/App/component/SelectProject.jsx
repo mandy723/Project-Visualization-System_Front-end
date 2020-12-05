@@ -34,11 +34,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function AddRepoDialog({ open, handleClose }) {
+function AddProjectDialog({ open, reloadProjects, handleClose }) {
   const [projectName, setProjectName] = useState("")
   const [repositoryURL, setRepositoryURL] = useState("")
   const createProject = () => {
-    if(projectName == "" || repositoryURL == "") {
+    if(projectName === "" || repositoryURL === "") {
       alert("不準啦馬的>///<")
     } else {
       let payload = {
@@ -47,6 +47,7 @@ function AddRepoDialog({ open, handleClose }) {
       }
       Axios.post("http://localhost:9100/pvs-api/project", payload)
          .then((response) => {
+           reloadProjects();
            handleClose()
          })
          .catch((e) => {
@@ -96,15 +97,18 @@ export default function SelectProject() {
   const [addRepoDialogOpen, setAddRepoDialogOpen] = useState(false)
   const [projects, setProjects] = useState([]);
 
-  useEffect(() => {
+  const loadProjects = () => {
     Axios.get("http://localhost:9100/pvs-api/project/1")
-         .then((response) => {
-           console.log(response)
-           setProjects(response.data)
-         })
-         .catch((e) => {
-           console.error(e)
-         }) 
+    .then((response) => {
+      setProjects(response.data)
+    })
+    .catch((e) => {
+      console.error(e)
+    }) 
+  }
+
+  useEffect(() => {
+    loadProjects();
   }, [])
 
   return (
@@ -119,8 +123,9 @@ export default function SelectProject() {
           </IconButton>
         </CardActionArea>
       </Card>
-      <AddRepoDialog 
+      <AddProjectDialog 
         open={addRepoDialogOpen} 
+        reloadProjects={loadProjects}
         handleClose={() => setAddRepoDialogOpen(false)}
       />
     </div>
