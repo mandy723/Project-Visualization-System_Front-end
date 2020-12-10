@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Card } from '@material-ui/core';
-import RepositoryAvatar from './RepositoryAvatar';
-import DrawingBoard from './DrawingBoard';
-import ChartFilter from './ChartFilter';
-import Axios from 'axios';
-import moment from 'moment';
+import React, { useState, useEffect } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import { Card } from '@material-ui/core'
+import RepositoryAvatar from './RepositoryAvatar'
+import DrawingBoard from './DrawingBoard'
+import ChartFilter from './ChartFilter'
+import Axios from 'axios'
+import moment from 'moment'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -15,10 +15,10 @@ const useStyles = makeStyles((theme) => ({
       },
       minWidth: '30px',
     },
-}));
+}))
 
 export default function ShowChart() {
-	const classes = useStyles();
+	const classes = useStyles()
   const [commitChartVisible, setCommitChartVisible] = useState(true)
   const [commitListData, setCommitListData] = useState([])
   const [issueListData, setIssueListData] = useState([])
@@ -50,7 +50,8 @@ export default function ShowChart() {
 
   useEffect(() => {
     let chartDataset = { labels:[], data: { team: []} }
-    for (let month = moment(startMonth); month <= moment(endMonth); month=month.add(1, 'months')) {
+    for (let month = moment(startMonth); month <= moment(endMonth); 
+    month=month.add(1, 'months')) {
       chartDataset.labels.push(month.format("YYYY-MM"))
       chartDataset.data.team.push(commitListData.filter(commit=>{
         return moment(commit.committedDate).format("YYYY-MM") == month.format("YYYY-MM")
@@ -123,6 +124,7 @@ export default function ShowChart() {
         <RepositoryAvatar 
           size = "small" 
           avatarUrl= "https://avatars3.githubusercontent.com/u/69631?v=4"
+          // avatarUrl= "https://www.peppercarrot.com/extras/html/2016_cat-generator/avatar.php?seed="
         />
         <p>
           <h2>Facebook/React</h2>
@@ -153,5 +155,5 @@ export default function ShowChart() {
         </Card>
       </div>
     </div>
-  );
+  )
 }

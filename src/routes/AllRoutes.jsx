@@ -1,6 +1,6 @@
-import React from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
-import Container from '../App/component/Container';
+import React from 'react'
+import { Redirect, Route, Switch } from 'react-router-dom'
+import Container from '../App/component/Container'
 import routes from './Routes'
 
 function ProtectedRoute({ component: Component, ...rest }) {

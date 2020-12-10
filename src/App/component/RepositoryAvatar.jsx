@@ -1,7 +1,7 @@
-import React from 'react';
-import { useHistory } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
-import { Box, CardActionArea, Avatar } from '@material-ui/core';
+import React from 'react'
+import { useHistory } from 'react-router-dom'
+import { makeStyles } from '@material-ui/core/styles'
+import { Box, CardActionArea, Avatar } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,20 +22,20 @@ const useStyles = makeStyles((theme) => ({
       width: "100%",
       height: "100%"
     }
-  }));
+  }))
 
 export default function RepositoryAvatar(props) {
-	const classes = useStyles();
-  const history = useHistory();
+	const classes = useStyles()
+  const history = useHistory()
   
   const goToShow = () => {
     history.push("/show")
-  };
+  }
   
   return (
     <Box className={props.size==='large' ? classes.large : classes.small}>
       <CardActionArea onClick={goToShow}>
-        <Avatar alt="first repository" src={props.avatarUrl} className={classes.avatar}/>
+        <Avatar alt="first repository" src="https://www.peppercarrot.com/extras/html/2016_cat-generator/avatar.php?seed=" className={classes.avatar}/>
         <p style={{"text-align":"center"}}>{props.repositoryName}</p>
       </CardActionArea>
     </Box>

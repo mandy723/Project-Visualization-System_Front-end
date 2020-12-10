@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
+import React, { useState } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers'
+import MomentUtils from '@date-io/moment'
 import { 
     Checkbox, 
     FormLabel,
@@ -13,7 +13,7 @@ import {
     AppBar,
     Tabs,
     Tab
-} from '@material-ui/core';
+} from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
         width: theme.spacing(20),
         height: theme.spacing(25),
     }
-}));
+}))
 
 function TabPanel({ children, value, index, ...other }) {  
     return (
@@ -51,29 +51,29 @@ function TabPanel({ children, value, index, ...other }) {
           </Box>
         )}
       </div>
-    );
+    )
 }
 
 function a11yProps(index) {
     return {
       id: `simple-tab-${index}`,
       'aria-controls': `simple-tabpanel-${index}`,
-    };
+    }
 }
 
 export default function ChartFilter({ onTabChanged }) {
-    const classes = useStyles();
-    const [selectedCommitStartDate, handleCommitStartDateChange] = useState(new Date());
-    const [selectedCommitEndDate, handleCommitEndDateChange] = useState(new Date());
-    const [selectedIssueStartDate, handleIssueStartDateChange] = useState(new Date());
-    const [selectedIssueEndDate, handleIssueEndDateChange] = useState(new Date());
+    const classes = useStyles()
+    const [selectedCommitStartDate, handleCommitStartDateChange] = useState(new Date())
+    const [selectedCommitEndDate, handleCommitEndDateChange] = useState(new Date())
+    const [selectedIssueStartDate, handleIssueStartDateChange] = useState(new Date())
+    const [selectedIssueEndDate, handleIssueEndDateChange] = useState(new Date())
     const [tabValue, setTabValue] = useState(0)
 
     const [state, setState] = React.useState({
         Tim: true,
         Mike: false,
         Jay: false,
-    });
+    })
 
     const handleTabChange = (event, newValue) => {
         setTabValue(newValue)
@@ -81,9 +81,9 @@ export default function ChartFilter({ onTabChanged }) {
     }
 
     const handleMemberChange = (event) => {
-        setState({ ...state, [event.target.name]: event.target.checked });
-    };
-    const { Tim, Mike, Jay } = state;
+        setState({ ...state, [event.target.name]: event.target.checked })
+    }
+    const { Tim, Mike, Jay } = state
 
     return (
         <div>
@@ -164,5 +164,5 @@ export default function ChartFilter({ onTabChanged }) {
                 </MuiPickersUtilsProvider>
             </TabPanel>
         </div>
-    );
+    )
 }

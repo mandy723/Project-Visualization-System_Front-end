@@ -1,6 +1,6 @@
-import Login from '../App/component/Login';
-import SelectProject from '../App/component/SelectProject';
-import ShowChart from '../App/component/ShowChart';
+import Login from '../App/component/Login'
+import SelectProject from '../App/component/SelectProject'
+import ShowChart from '../App/component/ShowChart'
 
 const routes = [
   {path: "/", redirect: true, to:"/login"},
@@ -9,4 +9,4 @@ const routes = [
   {path: "/show", component: ShowChart, loginRequired: true},
 ]
 
-export default routes;
+export default routes

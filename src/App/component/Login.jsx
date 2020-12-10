@@ -1,14 +1,14 @@
-import React from 'react';
-import logo from './../../welcome.png';
-import { useHistory } from 'react-router-dom';
-import './Login.css';
+import React from 'react'
+import logo from './../../welcome.png'
+import { useHistory } from 'react-router-dom'
+import './Login.css'
 
 export default function Login() {
-  const history = useHistory();
+  const history = useHistory()
 
   const goToSelect = () => {
     history.push("/select")
-  };
+  }
 
   return (
     <div>
@@ -23,5 +23,5 @@ export default function Login() {
         <button onClick={goToSelect} >Login</button>
       </header>
     </div>
-  );
+  )
 }

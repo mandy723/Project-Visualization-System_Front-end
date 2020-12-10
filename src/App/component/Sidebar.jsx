@@ -1,12 +1,12 @@
-import React from 'react';
-import { useHistory } from 'react-router-dom';
+import React from 'react'
+import { useHistory } from 'react-router-dom'
 import { Menu, 
   ExitToApp, 
   ArrowBack, 
   ChevronLeft, 
   ChevronRight,
   Search
-} from '@material-ui/icons';
+} from '@material-ui/icons'
 import { 
   Drawer, 
   IconButton, 
@@ -19,14 +19,14 @@ import {
   Toolbar,
   Divider,
   InputBase
-} from '@material-ui/core';
-import clsx from 'clsx';
-import { makeStyles, useTheme, fade } from '@material-ui/core/styles';
+} from '@material-ui/core'
+import clsx from 'clsx'
+import { makeStyles, useTheme, fade } from '@material-ui/core/styles'
 
-const drawerWidth = 240;
+const drawerWidth = 240
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
+    display: 'flex', 
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -122,16 +122,16 @@ const useStyles = makeStyles((theme) => ({
   list: {
     width: 200,
   },
-}));
+}))
 
 
 
 export default function Sidebar({ children }) {
   
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-  const history = useHistory();
-  const classes = useStyles();
+  const theme = useTheme()
+  const [open, setOpen] = React.useState(false)
+  const history = useHistory()
+  const classes = useStyles()
 
   const list = () => (
     <div className={classes.list} role="presentation" >
@@ -150,7 +150,7 @@ export default function Sidebar({ children }) {
         </ListItem>
       </List>
     </div>
-  );
+  )
 
 
   const logout = () => {
@@ -159,15 +159,15 @@ export default function Sidebar({ children }) {
   
   const goToSelect = () => {
     history.push("/select")
-  };
+  }
 
   const handleDrawerOpen = () => {
-    setOpen(true);
-  };
+    setOpen(true)
+  }
 
   const handleDrawerClose = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   return (
     <div className={classes.root}>
@@ -231,5 +231,5 @@ export default function Sidebar({ children }) {
         {children}
       </main>
     </div>
-  );
+  )
 }
