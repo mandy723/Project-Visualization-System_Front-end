@@ -7,9 +7,10 @@ import {
   IconButton
 } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
-import RepositoryAvatar from './RepositoryAvatar';
+import ProjectAvatar from './ProjectAvatar';
 import { useEffect } from 'react';
 import AddProjectDialog from './AddProjectDialog';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,8 +50,8 @@ export default function SelectProject() {
 
   return (
     <div className={classes.root}>
-      {projects.map( repository =>
-        <RepositoryAvatar size="large" avatarUrl={repository.avatarUrl} repositoryName={repository.projectName} />
+      {projects.map( project =>
+        <ProjectAvatar size="large" projectId={project.projectId} avatarURL={project.avatarURL} projectName={project.projectName} />
       )}
       <Card>
         <CardActionArea onClick={() => setAddRepoDialogOpen(true)}>
