@@ -32,16 +32,16 @@ export default function ProjectAvatar(props) {
 
 
   
-  const goToShow = () => {
+  const goToCommit = () => {
     localStorage.setItem("projectId", props.projectId)
     localStorage.setItem("avatarURL", props.avatarURL)
     localStorage.setItem("projectName", props.projectName)
-    history.push("/show")
+    history.push("/commit")
   }
 
   return (
     <Box className={props.size==='large' ? classes.large : classes.small}>
-      <CardActionArea onClick={goToShow}>
+      <CardActionArea onClick={goToCommit}>
         <Avatar alt="first repository" src={props.avatarURL} className={classes.avatar}/>
         {props.size === 'large' &&
           <p style={{"text-align":"center"}}>{props.projectName}</p>

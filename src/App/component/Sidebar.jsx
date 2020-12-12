@@ -8,7 +8,6 @@ import { Menu,
   Search,
   ExpandLess,
   ExpandMore,
-  StarBorder,
   GitHub
 } from '@material-ui/icons'
 import { 
@@ -23,13 +22,17 @@ import {
   Toolbar,
   Divider,
   InputBase,
-  Collapse
+  Collapse,
 } from '@material-ui/core'
 import { IoGitCommitSharp } from 'react-icons/io5'
 import { GoIssueOpened } from 'react-icons/go'
 import clsx from 'clsx'
+import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers'
+import MomentUtils from '@date-io/moment'
 import { makeStyles, useTheme, fade } from '@material-ui/core/styles'
 import { useState } from 'react'
+import { connect } from 'react-redux'
+import { setStartDate, setEndDate } from './../../redux/action'
 
 const drawerWidth = 240
 const useStyles = makeStyles((theme) => ({
@@ -80,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
       width: theme.spacing(9) + 1,
     },
   },
-  toolbar: {
+  drawerContent: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
@@ -137,18 +140,31 @@ const useStyles = makeStyles((theme) => ({
   },
   menuList: {
     height: 'calc(100%)'
+  },
+  dateSelector: {
+    // marginRight: -10,
+    width: 204, 
+    padding: theme.spacing(0, 3, 0),
+    // borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    }
   }
 }))
 
 
 
-export default function Sidebar({ children }) {
+function Sidebar(prop) {
+  //todo seperate sidebar and appbar~~~ 
   
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
   const history = useHistory()
   const classes = useStyles()
   const [menuOpen, setMenuOpen] = useState(true)
+  const [startDate, handleStartDateChange] = useState(new Date())
+  const [endDate, handleEndDateChange] = useState(new Date())
 
   const list = () => (
     <div className={classes.list} role="presentation" >
@@ -168,13 +184,13 @@ export default function Sidebar({ children }) {
         </ListItem>
         <Collapse in={menuOpen} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <ListItem button className={classes.nested}>
+            <ListItem button className={classes.nested} onClick={goToCommit}>
               <ListItemIcon>
                 <IoGitCommitSharp size={24.5}/>
               </ListItemIcon>
               <ListItemText primary="Commit" />
             </ListItem>
-            <ListItem button className={classes.nested}>
+            <ListItem button className={classes.nested} onClick={goToIssue}>
               <ListItemIcon>
                 <GoIssueOpened size={24.5}/>
               </ListItemIcon>
@@ -202,6 +218,16 @@ export default function Sidebar({ children }) {
     history.push("/select")
   }
 
+  const goToCommit = () => {
+    history.push("/commit")
+  }
+
+  const goToIssue = () => {
+    history.push("/issue")
+  }
+
+
+  
   const handleDrawerOpen = () => {
     setOpen(true)
   }
@@ -244,6 +270,34 @@ export default function Sidebar({ children }) {
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
+            <div className={classes.dateSelector}>
+              <MuiPickersUtilsProvider utils={MomentUtils}>
+              <DatePicker
+                    fullWidth
+                    variant="inline"
+                    openTo="year"
+                    views={["year", "month"]}
+                    label="Start Month and Year"
+                    value={prop.startDate}
+                    onChange={prop.setStartDate}
+                    autoOk
+                />
+              </MuiPickersUtilsProvider>
+            </div>
+            <div className={classes.dateSelector}>
+              <MuiPickersUtilsProvider utils={MomentUtils}> 
+                <DatePicker
+                    fullWidth
+                    variant="inline"
+                    openTo="year"
+                    views={["year", "month"]}
+                    label="End Month and Year"
+                    value={prop.endDate}
+                    onChange={prop.setEndDate}
+                    autoOk
+                />
+              </MuiPickersUtilsProvider>
+            </div>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -259,7 +313,7 @@ export default function Sidebar({ children }) {
           }),
         }}
       >
-        <div className={classes.toolbar}>
+        <div className={classes.drawerContent}>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? <ChevronRight /> : <ChevronLeft />}
           </IconButton>
@@ -268,9 +322,25 @@ export default function Sidebar({ children }) {
         {list()}
       </Drawer>
       <main className={classes.content}>
-        <div className={classes.toolbar} />
-        {children}
+        <div className={classes.drawerContent} />
+        {prop.children}
       </main>
     </div>
   )
 }
+
+const mapStateToProps = (state) => {
+  return {
+    startDate: state.selectedDate.startDate,
+    endDate: state.selectedDate.endDate
+  }
+}
+
+const mapActionToProps = (dispatch) => {
+  return {
+    setStartDate: (startDate) => dispatch(setStartDate(startDate)),
+    setEndDate: (endDate) => dispatch(setEndDate(endDate))
+  }
+}
+
+export default connect(mapStateToProps, mapActionToProps)(Sidebar)
