@@ -5,7 +5,11 @@ import { Menu,
   ArrowBack, 
   ChevronLeft, 
   ChevronRight,
-  Search
+  Search,
+  ExpandLess,
+  ExpandMore,
+  StarBorder,
+  GitHub
 } from '@material-ui/icons'
 import { 
   Drawer, 
@@ -18,10 +22,14 @@ import {
   AppBar,
   Toolbar,
   Divider,
-  InputBase
+  InputBase,
+  Collapse
 } from '@material-ui/core'
+import { IoGitCommitSharp } from 'react-icons/io5'
+import { GoIssueOpened } from 'react-icons/go'
 import clsx from 'clsx'
 import { makeStyles, useTheme, fade } from '@material-ui/core/styles'
+import { useState } from 'react'
 
 const drawerWidth = 240
 const useStyles = makeStyles((theme) => ({
@@ -121,7 +129,15 @@ const useStyles = makeStyles((theme) => ({
   },
   list: {
     width: 200,
+    height: 'calc(100%)'
   },
+  logout: {
+    position: "absolute",
+    bottom: 0
+  },
+  menuList: {
+    height: 'calc(100%)'
+  }
 }))
 
 
@@ -132,21 +148,46 @@ export default function Sidebar({ children }) {
   const [open, setOpen] = React.useState(false)
   const history = useHistory()
   const classes = useStyles()
+  const [menuOpen, setMenuOpen] = useState(true)
 
   const list = () => (
     <div className={classes.list} role="presentation" >
-      <List>
-        <ListItem button onClick={logout}>
-            <ListItemIcon>
-                <ExitToApp/>
-            </ListItemIcon>
-            <ListItemText primary="Logout"/>
-        </ListItem>
+      <List className={classes.menuList}>
         <ListItem button onClick={goToSelect}>
             <ListItemIcon>
                 <ArrowBack/>
             </ListItemIcon>
             <ListItemText primary="Select"/>
+        </ListItem>
+        <ListItem button onClick={() => {setMenuOpen(!menuOpen)}}>
+        <ListItemIcon>
+          <GitHub />
+        </ListItemIcon>
+        <ListItemText primary="GitHub" />
+          {menuOpen ? <ExpandLess /> : <ExpandMore />}
+        </ListItem>
+        <Collapse in={menuOpen} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListItem button className={classes.nested}>
+              <ListItemIcon>
+                <IoGitCommitSharp size={24.5}/>
+              </ListItemIcon>
+              <ListItemText primary="Commit" />
+            </ListItem>
+            <ListItem button className={classes.nested}>
+              <ListItemIcon>
+                <GoIssueOpened size={24.5}/>
+              </ListItemIcon>
+              <ListItemText primary="Issue" />
+            </ListItem>
+          </List>
+        </Collapse>
+        
+        <ListItem className={classes.logout} button onClick={logout}>
+            <ListItemIcon>
+                <ExitToApp/>
+            </ListItemIcon>
+            <ListItemText primary="Logout"/>
         </ListItem>
       </List>
     </div>
