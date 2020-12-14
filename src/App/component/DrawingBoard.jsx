@@ -42,7 +42,7 @@ export default function DrawingBoard(props) {
         labels: {
           boxWidth: 10
         },
-        onClick: null
+        // onClick: 
       },
       scales: {
         xAxes: [

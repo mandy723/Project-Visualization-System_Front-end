@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CommitPage(prop) {
 	const classes = useStyles()
-  const [commitChartVisible, setCommitChartVisible] = useState(true)
   const [commitListData, setCommitListData] = useState([])
   const [dataForTeamCommitChart, setDataForTeamCommitChart] = useState({ labels:[], data: { team: []} })
   const [dataForMemberCommitChart, setDataForMemberCommitChart] = useState({ labels:[], data: {} })
@@ -50,6 +49,7 @@ export default function CommitPage(prop) {
 
   useEffect(() => {
     let chartDataset = { labels:[], data: { team: []} }
+
     for (let month = moment(startMonth); month <= moment(endMonth); 
     month=month.add(1, 'months')) {
       chartDataset.labels.push(month.format("YYYY-MM"))
@@ -58,6 +58,23 @@ export default function CommitPage(prop) {
       }).length)
     }
     setDataForTeamCommitChart(chartDataset)
+// >>>>>>>>>>>>>>
+    new Set(commitListData.map(commit=>commit.authorName)).forEach(author => {
+      chartDataset.data[author] = []
+    })
+    for (let month = moment(startMonth); month <= moment(endMonth); month=month.add(1, 'months')) {
+      for (var key in chartDataset.data) {
+        chartDataset.data[key].push(0)
+      }
+    }
+    let temp = Object.keys(chartDataset.data).map(key => [key, chartDataset.data[key]])
+    temp.sort((first, second) => second[1].reduce((a, b)=>a+b)-first[1].reduce((a, b)=>a+b))
+    let result = {}
+    temp.slice(0, 10).forEach(x=> {
+      result[x[0]] = x[1]
+    })
+    chartDataset.data = result
+// <<<<<<<<<<<<<<
   }, [commitListData])
 
   useEffect(() => {
@@ -65,7 +82,7 @@ export default function CommitPage(prop) {
       labels:[],
       data: {}
     }
-    new Set(commitListData.map(commit=>commit.authorEmail)).forEach(author => {
+    new Set(commitListData.map(commit=>commit.authorName)).forEach(author => {
       chartDataset.data[author] = []
     })
     for (let month = moment(startMonth); month <= moment(endMonth); month=month.add(1, 'months')) {
@@ -75,7 +92,7 @@ export default function CommitPage(prop) {
       }
       commitListData.forEach(commitData => {
         if (moment(commitData.committedDate).format("YYYY-MM") == month.format("YYYY-MM")) {
-          chartDataset.data[commitData.authorEmail][chartDataset.labels.length-1] += 1
+          chartDataset.data[commitData.authorName][chartDataset.labels.length-1] += 1
         }
       })
     }

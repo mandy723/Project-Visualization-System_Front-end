@@ -8,7 +8,8 @@ import { Menu,
   Search,
   ExpandLess,
   ExpandMore,
-  GitHub
+  GitHub,
+  Code
 } from '@material-ui/icons'
 import { 
   Drawer, 
@@ -196,6 +197,12 @@ function Sidebar(prop) {
               </ListItemIcon>
               <ListItemText primary="Issue" />
             </ListItem>
+            <ListItem button className={classes.nested} onClick={goToCodeBase}>
+              <ListItemIcon>
+                 <Code />
+              </ListItemIcon>
+              <ListItemText primary="Code Base" />
+            </ListItem>
           </List>
         </Collapse>
         
@@ -225,6 +232,11 @@ function Sidebar(prop) {
   const goToIssue = () => {
     history.push("/issue")
   }
+
+  const goToCodeBase = () => {
+    history.push("/code_base")
+  }
+
 
 
   
