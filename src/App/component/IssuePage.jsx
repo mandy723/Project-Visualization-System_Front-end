@@ -3,10 +3,11 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Card } from '@material-ui/core'
 import ProjectAvatar from './ProjectAvatar'
 import DrawingBoard from './DrawingBoard'
-import ChartFilter from './ChartFilter'
 import Axios from 'axios'
 import moment from 'moment'
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@material-ui/core/CircularProgress'
+import { connect } from 'react-redux';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -18,12 +19,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-export default function IssuePage(prop) {
+function IssuePage(prop) {
 	const classes = useStyles()
   const [issueListData, setIssueListData] = useState([])
   const [dataForIssueChart, setDataForIssueChart] = useState({ labels:[], data: { created: [], closed: []} })
-  const [startMonth, setStartMonth] = useState(moment().subtract(1, 'years').format("YYYY-MM"))
-  const [endMonth, setEndMonth] = useState(moment().format("YYYY-MM"))
 
   const projectId = localStorage.getItem("projectId")
   const projectName = localStorage.getItem("projectName")
@@ -40,6 +39,7 @@ export default function IssuePage(prop) {
   }, [])
 
   useEffect(() => {
+    const { endMonth } = prop
     let chartDataset = { labels:[], data: { created: [], closed: []} }
     let issueListDataSortedByCreatedAt = issueListData
     let issueListDataSortedByClosedAt = issueListData
@@ -86,7 +86,7 @@ export default function IssuePage(prop) {
           <div>
             <h1>Team</h1>
             <div>
-              <DrawingBoard test="issue" data={dataForIssueChart}/>
+              <DrawingBoard data={dataForIssueChart}/>
             </div>
           </div>
         </div>
@@ -94,3 +94,11 @@ export default function IssuePage(prop) {
     </div>
   )
 }
+
+const mapStateToProps = (state) => {
+  return {
+    endMonth: state.selectedMonth.endMonth
+  }
+}
+
+export default connect(mapStateToProps)(IssuePage);

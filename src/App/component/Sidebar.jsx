@@ -33,7 +33,7 @@ import MomentUtils from '@date-io/moment'
 import { makeStyles, useTheme, fade } from '@material-ui/core/styles'
 import { useState } from 'react'
 import { connect } from 'react-redux'
-import { setStartDate, setEndDate } from './../../redux/action'
+import { setStartMonth, setEndMonth } from './../../redux/action'
 
 const drawerWidth = 240
 const useStyles = makeStyles((theme) => ({
@@ -142,7 +142,7 @@ const useStyles = makeStyles((theme) => ({
   menuList: {
     height: 'calc(100%)'
   },
-  dateSelector: {
+  monthSelector: {
     // marginRight: -10,
     width: 204, 
     padding: theme.spacing(0, 3, 0),
@@ -164,8 +164,6 @@ function Sidebar(prop) {
   const history = useHistory()
   const classes = useStyles()
   const [menuOpen, setMenuOpen] = useState(true)
-  const [startDate, handleStartDateChange] = useState(new Date())
-  const [endDate, handleEndDateChange] = useState(new Date())
 
   const list = () => (
     <div className={classes.list} role="presentation" >
@@ -216,7 +214,6 @@ function Sidebar(prop) {
     </div>
   )
 
-
   const logout = () => {
 		history.push('/login')
   }
@@ -234,12 +231,9 @@ function Sidebar(prop) {
   }
 
   const goToCodeBase = () => {
-    history.push("/code_base")
+    history.push("/codebase")
   }
 
-
-
-  
   const handleDrawerOpen = () => {
     setOpen(true)
   }
@@ -282,7 +276,7 @@ function Sidebar(prop) {
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
-            <div className={classes.dateSelector}>
+            <div className={classes.monthSelector}>
               <MuiPickersUtilsProvider utils={MomentUtils}>
               <DatePicker
                     fullWidth
@@ -290,13 +284,13 @@ function Sidebar(prop) {
                     openTo="year"
                     views={["year", "month"]}
                     label="Start Month and Year"
-                    value={prop.startDate}
-                    onChange={prop.setStartDate}
+                    value={prop.startMonth}
+                    onChange={prop.setStartMonth}
                     autoOk
                 />
               </MuiPickersUtilsProvider>
             </div>
-            <div className={classes.dateSelector}>
+            <div className={classes.monthSelector}>
               <MuiPickersUtilsProvider utils={MomentUtils}> 
                 <DatePicker
                     fullWidth
@@ -304,8 +298,8 @@ function Sidebar(prop) {
                     openTo="year"
                     views={["year", "month"]}
                     label="End Month and Year"
-                    value={prop.endDate}
-                    onChange={prop.setEndDate}
+                    value={prop.endMonth}
+                    onChange={prop.setEndMonth}
                     autoOk
                 />
               </MuiPickersUtilsProvider>
@@ -343,15 +337,15 @@ function Sidebar(prop) {
 
 const mapStateToProps = (state) => {
   return {
-    startDate: state.selectedDate.startDate,
-    endDate: state.selectedDate.endDate
+    startMonth: state.selectedMonth.startMonth,
+    endMonth: state.selectedMonth.endMonth
   }
 }
 
 const mapActionToProps = (dispatch) => {
   return {
-    setStartDate: (startDate) => dispatch(setStartDate(startDate)),
-    setEndDate: (endDate) => dispatch(setEndDate(endDate))
+    setStartMonth: (startMonth) => dispatch(setStartMonth(startMonth)),
+    setEndMonth: (endMonth) => dispatch(setEndMonth(endMonth))
   }
 }
 

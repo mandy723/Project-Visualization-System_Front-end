@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Card } from '@material-ui/core'
 import ProjectAvatar from './ProjectAvatar'
 import DrawingBoard from './DrawingBoard'
-import ChartFilter from './ChartFilter'
 import Axios from 'axios'
 import moment from 'moment'
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@material-ui/core/CircularProgress'
+import { connect } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -18,13 +18,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-export default function CommitPage(prop) {
+function CommitPage(prop) {
 	const classes = useStyles()
   const [commitListData, setCommitListData] = useState([])
   const [dataForTeamCommitChart, setDataForTeamCommitChart] = useState({ labels:[], data: { team: []} })
   const [dataForMemberCommitChart, setDataForMemberCommitChart] = useState({ labels:[], data: {} })
-  const [startMonth, setStartMonth] = useState(moment().subtract(1, 'years').format("YYYY-MM"))
-  const [endMonth, setEndMonth] = useState(moment().format("YYYY-MM"))
 
   const projectId = localStorage.getItem("projectId")
   const projectName = localStorage.getItem("projectName")
@@ -48,36 +46,22 @@ export default function CommitPage(prop) {
   }, [])
 
   useEffect(() => {
-    let chartDataset = { labels:[], data: { team: []} }
+    const { startMonth, endMonth } = prop
 
-    for (let month = moment(startMonth); month <= moment(endMonth); 
-    month=month.add(1, 'months')) {
+    let chartDataset = { labels:[], data: { team: []} }
+    for (let month = moment(startMonth); month <= moment(endMonth); month=month.add(1, 'months')) {
       chartDataset.labels.push(month.format("YYYY-MM"))
       chartDataset.data.team.push(commitListData.filter(commit=>{
         return moment(commit.committedDate).format("YYYY-MM") == month.format("YYYY-MM")
       }).length)
     }
     setDataForTeamCommitChart(chartDataset)
-// >>>>>>>>>>>>>>
-    new Set(commitListData.map(commit=>commit.authorName)).forEach(author => {
-      chartDataset.data[author] = []
-    })
-    for (let month = moment(startMonth); month <= moment(endMonth); month=month.add(1, 'months')) {
-      for (var key in chartDataset.data) {
-        chartDataset.data[key].push(0)
-      }
-    }
-    let temp = Object.keys(chartDataset.data).map(key => [key, chartDataset.data[key]])
-    temp.sort((first, second) => second[1].reduce((a, b)=>a+b)-first[1].reduce((a, b)=>a+b))
-    let result = {}
-    temp.slice(0, 10).forEach(x=> {
-      result[x[0]] = x[1]
-    })
-    chartDataset.data = result
-// <<<<<<<<<<<<<<
-  }, [commitListData])
+  }, [commitListData, prop.startMonth, prop.endMonth])
 
   useEffect(() => {
+
+    const { startMonth, endMonth } = prop
+
     let chartDataset = {
       labels:[],
       data: {}
@@ -103,21 +87,25 @@ export default function CommitPage(prop) {
       result[x[0]] = x[1]
     })
     chartDataset.data = result
+    console.log(chartDataset)
     setDataForMemberCommitChart(chartDataset)
-  }, [commitListData])
+  }, [commitListData, prop.startMonth, prop.endMonth])
+
+  if(!prop.currentProject) {
+    return (
+      <Redirect to="/select"/>
+    )
+  }
 
   return(
     <div style={{marginLeft:"10px"}}>
       <div className={classes.root}>
         <ProjectAvatar 
           size = "small" 
-          avatarURL={avatarURL}
-          projectId={projectId}
-          projectName={projectName}
+          project={prop.currentProject}
         />
         <p>
-          <h2>{projectName}</h2>
-          
+          <h2>{prop.currentProject ? prop.currentProject.projectName : ""}</h2>
         </p>
       </div>
       <div className={classes.root}>
@@ -125,11 +113,11 @@ export default function CommitPage(prop) {
           <div>
             <h1>Team</h1>
             <div>
-              <DrawingBoard test="group" data={dataForTeamCommitChart}/>
+              <DrawingBoard data={dataForTeamCommitChart}/>
             </div>
             <h1>Member</h1>
             <div>
-              <DrawingBoard test="person" data={dataForMemberCommitChart}/>
+              <DrawingBoard data={dataForMemberCommitChart}/>
             </div>
           </div>
         </div>
@@ -137,3 +125,14 @@ export default function CommitPage(prop) {
     </div>
   )
 }
+
+
+const mapStateToProps = (state) => {
+  return {
+    startMonth: state.selectedMonth.startMonth,
+    endMonth: state.selectedMonth.endMonth,
+    currentProject: state.currentProject
+  }
+}
+
+export default connect(mapStateToProps)(CommitPage);
