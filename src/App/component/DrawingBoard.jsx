@@ -20,7 +20,7 @@ export default function DrawingBoard(props) {
         let datasets = Object.keys(props.data.data).map(key => {
           return {
             label: key,
-            fill: false,
+            fill: "origin",
             borderColor: getRandomColor(),
             borderWidth: 1,
             pointRadius: 2,

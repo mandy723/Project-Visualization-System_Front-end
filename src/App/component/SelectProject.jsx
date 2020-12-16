@@ -51,7 +51,7 @@ export default function SelectProject() {
   return (
     <div className={classes.root}>
       {projects.map( project =>
-        <ProjectAvatar size="large" projectId={project.projectId} avatarURL={project.avatarURL} projectName={project.projectName} />
+        <ProjectAvatar size="large" project={project} />
       )}
       <Card>
         <CardActionArea onClick={() => setAddRepoDialogOpen(true)}>

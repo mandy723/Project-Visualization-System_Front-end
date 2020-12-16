@@ -4,6 +4,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Box, CardActionArea, Avatar, CardActions, IconButton } from '@material-ui/core'
 import GitHubIcon from '@material-ui/icons/GitHub';
 import GpsFixedIcon from '@material-ui/icons/GpsFixed';
+import { connect } from 'react-redux';
+import { setCurrentProject } from '../../redux/action';
+
 const useStyles = makeStyles((theme) => ({
     root: {
       display: 'flex',
@@ -26,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     }
   }))
 
-export default function ProjectAvatar(props) {
+function ProjectAvatar(props) {
 	const classes = useStyles()
   const history = useHistory()
 
@@ -36,15 +39,17 @@ export default function ProjectAvatar(props) {
     localStorage.setItem("projectId", props.projectId)
     localStorage.setItem("avatarURL", props.avatarURL)
     localStorage.setItem("projectName", props.projectName)
+    props.setCurrentProject(props.project)
+
     history.push("/commit")
   }
-
+  
   return (
     <Box className={props.size==='large' ? classes.large : classes.small}>
       <CardActionArea onClick={goToCommit}>
-        <Avatar alt="first repository" src={props.avatarURL} className={classes.avatar}/>
+        <Avatar alt="first repository" src={props.project.avatarURL} className={classes.avatar}/>
         {props.size === 'large' &&
-          <p style={{"text-align":"center"}}>{props.projectName}</p>
+          <p style={{"text-align":"center"}}>{props.project.projectName}</p>
         }
         {props.size === 'large' && 
           <CardActions disableSpacing>
@@ -60,3 +65,12 @@ export default function ProjectAvatar(props) {
     </Box>
   )
 }
+
+
+const mapActionToProps = (dispatch) => {
+  return {
+    setCurrentProject: (selectedProject) => dispatch(setCurrentProject(selectedProject)),
+  }
+}
+
+export default connect(null, mapActionToProps)(ProjectAvatar)
