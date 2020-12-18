@@ -280,13 +280,13 @@ function Sidebar(prop) {
               <MuiPickersUtilsProvider utils={MomentUtils}>
               <DatePicker
                     fullWidth
-                    variant="inline"
+                    // variant="inline"
                     openTo="year"
                     views={["year", "month"]}
                     label="Start Month and Year"
                     value={prop.startMonth}
                     onChange={prop.setStartMonth}
-                    autoOk
+                    // autoOk
                 />
               </MuiPickersUtilsProvider>
             </div>
@@ -294,13 +294,13 @@ function Sidebar(prop) {
               <MuiPickersUtilsProvider utils={MomentUtils}> 
                 <DatePicker
                     fullWidth
-                    variant="inline"
+                    // variant="inline"
                     openTo="year"
                     views={["year", "month"]}
                     label="End Month and Year"
                     value={prop.endMonth}
                     onChange={prop.setEndMonth}
-                    autoOk
+                    // autoOk
                 />
               </MuiPickersUtilsProvider>
             </div>

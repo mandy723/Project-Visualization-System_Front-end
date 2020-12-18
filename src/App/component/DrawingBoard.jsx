@@ -3,6 +3,14 @@ import { Line } from "react-chartjs-2"
 
 export default function DrawingBoard(props) {
   
+  // const [loading, setLoading] = useState(false);
+  // const handleClose = () => {
+  //   setLoading(false);
+  // };
+  // const handleToggle = () => {
+  //   setLoading(!open);
+  // };
+
     const [data, setData] = useState({})
 
     const getRandomColor = () => {

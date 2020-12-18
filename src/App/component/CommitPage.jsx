@@ -4,7 +4,7 @@ import ProjectAvatar from './ProjectAvatar'
 import DrawingBoard from './DrawingBoard'
 import Axios from 'axios'
 import moment from 'moment'
-import CircularProgress from '@material-ui/core/CircularProgress'
+import { CircularProgress, Backdrop } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 
@@ -16,6 +16,10 @@ const useStyles = makeStyles((theme) => ({
       },
       minWidth: '30px',
     },
+    backdrop: {
+      zIndex: theme.zIndex.drawer + 1,
+      color: '#fff',
+    },
 }))
 
 function CommitPage(prop) {
@@ -24,17 +28,29 @@ function CommitPage(prop) {
   const [dataForTeamCommitChart, setDataForTeamCommitChart] = useState({ labels:[], data: { team: []} })
   const [dataForMemberCommitChart, setDataForMemberCommitChart] = useState({ labels:[], data: {} })
 
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleToggle = () => {
+    setOpen(!open);
+  };
+
+
   const projectId = localStorage.getItem("projectId")
   const projectName = localStorage.getItem("projectName")
   const avatarURL = localStorage.getItem("avatarURL")
 
   useEffect(() => {
+    handleToggle()
     Axios.post("http://localhost:9100/pvs-api/commits/facebook/react")
     .then((response) => {
-      //todo need reafctor with async
+      // todo need reafctor with async
       Axios.get("http://localhost:9100/pvs-api/commits/facebook/react")
          .then((response) => {
            setCommitListData(response.data)
+           handleClose()
+
          })
          .catch((e) => {
            console.error(e)
@@ -43,7 +59,7 @@ function CommitPage(prop) {
     .catch((e) => {
       console.error(e)
     })
-  }, [])
+  }, [prop.startMonth, prop.endMonth])
 
   useEffect(() => {
     const { startMonth, endMonth } = prop
@@ -55,6 +71,7 @@ function CommitPage(prop) {
         return moment(commit.committedDate).format("YYYY-MM") == month.format("YYYY-MM")
       }).length)
     }
+    
     setDataForTeamCommitChart(chartDataset)
   }, [commitListData, prop.startMonth, prop.endMonth])
 
@@ -99,6 +116,9 @@ function CommitPage(prop) {
 
   return(
     <div style={{marginLeft:"10px"}}>
+      <Backdrop className={classes.backdrop} open={open}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <div className={classes.root}>
         <ProjectAvatar 
           size = "small" 
