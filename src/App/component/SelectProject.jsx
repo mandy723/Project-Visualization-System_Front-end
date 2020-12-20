@@ -53,7 +53,7 @@ export default function SelectProject() {
       {projects.map( project =>
         <ProjectAvatar size="large" project={project} />
       )}
-      <Card>
+      <Card id="create-project-card">
         <CardActionArea onClick={() => setAddRepoDialogOpen(true)}>
           <IconButton color="primary" className={classes.large}  disabled>
             <Add className={classes.small}/>
