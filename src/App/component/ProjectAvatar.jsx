@@ -4,8 +4,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Box, CardActionArea, Avatar, CardActions, IconButton } from '@material-ui/core'
 import GitHubIcon from '@material-ui/icons/GitHub';
 import GpsFixedIcon from '@material-ui/icons/GpsFixed';
-import { connect } from 'react-redux';
-import { setCurrentProject } from '../../redux/action';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -36,10 +34,7 @@ function ProjectAvatar(props) {
 
   
   const goToCommit = () => {
-    localStorage.setItem("projectId", props.projectId)
-    localStorage.setItem("avatarURL", props.avatarURL)
-    localStorage.setItem("projectName", props.projectName)
-    props.setCurrentProject(props.project)
+    localStorage.setItem("projectId", props.project.projectId)
 
     history.push("/commit")
   }
@@ -66,11 +61,4 @@ function ProjectAvatar(props) {
   )
 }
 
-
-const mapActionToProps = (dispatch) => {
-  return {
-    setCurrentProject: (selectedProject) => dispatch(setCurrentProject(selectedProject)),
-  }
-}
-
-export default connect(null, mapActionToProps)(ProjectAvatar)
+export default ProjectAvatar;

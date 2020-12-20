@@ -27,6 +27,7 @@ function CommitPage(prop) {
   const [commitListData, setCommitListData] = useState([])
   const [dataForTeamCommitChart, setDataForTeamCommitChart] = useState({ labels:[], data: { team: []} })
   const [dataForMemberCommitChart, setDataForMemberCommitChart] = useState({ labels:[], data: {} })
+  const [currentProject, setCurrentProject] = useState({})
 
   const [open, setOpen] = useState(false);
   const handleClose = () => {
@@ -38,28 +39,39 @@ function CommitPage(prop) {
 
 
   const projectId = localStorage.getItem("projectId")
-  const projectName = localStorage.getItem("projectName")
-  const avatarURL = localStorage.getItem("avatarURL")
+  useEffect(() => {
+    Axios.get(`http://localhost:9100/pvs-api/project/1/${projectId}`)
+    .then((response) => {
+      setCurrentProject(response.data)
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+  }, [])
+
 
   useEffect(() => {
-    handleToggle()
-    Axios.post("http://localhost:9100/pvs-api/commits/facebook/react")
-    .then((response) => {
-      // todo need reafctor with async
-      Axios.get("http://localhost:9100/pvs-api/commits/facebook/react")
-         .then((response) => {
-           setCommitListData(response.data)
-           handleClose()
-
-         })
-         .catch((e) => {
-           console.error(e)
-         })
-    })
-    .catch((e) => {
-      console.error(e)
-    })
-  }, [prop.startMonth, prop.endMonth])
+    if(Object.keys(currentProject).length != 0) {
+      handleToggle()
+      const githubRepo = currentProject.repositoryDTOList.find(repo => repo.type == 'github')
+      const query = githubRepo.url.split("github.com/")[1]
+      Axios.post(`http://localhost:9100/pvs-api/commits/${query}`)
+      .then((response) => {
+        // todo need reafctor with async
+        Axios.get(`http://localhost:9100/pvs-api/commits/${query}`)
+          .then((response) => {
+            setCommitListData(response.data)
+            handleClose()
+          })
+          .catch((e) => {
+            console.error(e)
+          })
+      })
+      .catch((e) => {
+        console.error(e)
+      })
+    }
+  }, [currentProject, prop.startMonth, prop.endMonth])
 
   useEffect(() => {
     const { startMonth, endMonth } = prop
@@ -76,7 +88,6 @@ function CommitPage(prop) {
   }, [commitListData, prop.startMonth, prop.endMonth])
 
   useEffect(() => {
-
     const { startMonth, endMonth } = prop
 
     let chartDataset = {
@@ -104,11 +115,10 @@ function CommitPage(prop) {
       result[x[0]] = x[1]
     })
     chartDataset.data = result
-    console.log(chartDataset)
     setDataForMemberCommitChart(chartDataset)
   }, [commitListData, prop.startMonth, prop.endMonth])
 
-  if(!prop.currentProject) {
+  if(!projectId) {
     return (
       <Redirect to="/select"/>
     )
@@ -122,10 +132,10 @@ function CommitPage(prop) {
       <div className={classes.root}>
         <ProjectAvatar 
           size = "small" 
-          project={prop.currentProject}
+          project={currentProject}
         />
         <p>
-          <h2>{prop.currentProject ? prop.currentProject.projectName : ""}</h2>
+          <h2>{currentProject ? currentProject.projectName : ""}</h2>
         </p>
       </div>
       <div className={classes.root}>
@@ -151,7 +161,6 @@ const mapStateToProps = (state) => {
   return {
     startMonth: state.selectedMonth.startMonth,
     endMonth: state.selectedMonth.endMonth,
-    currentProject: state.currentProject
   }
 }
 
