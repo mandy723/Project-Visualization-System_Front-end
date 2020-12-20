@@ -11,6 +11,7 @@ import { Menu,
   GitHub,
   Code
 } from '@material-ui/icons'
+import GpsFixedIcon from '@material-ui/icons/GpsFixed';
 import { 
   Drawer, 
   IconButton, 
@@ -175,10 +176,10 @@ function Sidebar(prop) {
             <ListItemText primary="Select"/>
         </ListItem>
         <ListItem button onClick={() => {setMenuOpen(!menuOpen)}}>
-        <ListItemIcon>
-          <GitHub />
-        </ListItemIcon>
-        <ListItemText primary="GitHub" />
+          <ListItemIcon>
+            <GitHub />
+          </ListItemIcon>
+          <ListItemText primary="GitHub" />
           {menuOpen ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={menuOpen} timeout="auto" unmountOnExit>
@@ -203,7 +204,13 @@ function Sidebar(prop) {
             </ListItem>
           </List>
         </Collapse>
-        
+        <ListItem button onClick={goToSonarQube}>
+          <ListItemIcon>
+            <GpsFixedIcon />
+          </ListItemIcon>
+          <ListItemText primary="SonarQube" />
+        </ListItem>
+
         <ListItem className={classes.logout} button onClick={logout}>
             <ListItemIcon>
                 <ExitToApp/>
@@ -232,6 +239,10 @@ function Sidebar(prop) {
 
   const goToCodeBase = () => {
     history.push("/codebase")
+  }
+
+  const goToSonarQube = () => {
+    history.push("/sonarqube")
   }
 
   const handleDrawerOpen = () => {
