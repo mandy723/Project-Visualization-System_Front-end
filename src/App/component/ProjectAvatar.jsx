@@ -48,12 +48,16 @@ function ProjectAvatar(props) {
         }
         {props.size === 'large' && 
           <CardActions disableSpacing>
-            <IconButton aria-label="GitHub">
-              <GitHubIcon />
-            </IconButton>
-            <IconButton aria-label="SonarQube">
-              <GpsFixedIcon />
-            </IconButton>
+            {props.project.repositoryDTOList.find(x=> x.type == "github") &&
+              <IconButton aria-label="GitHub">
+                <GitHubIcon />
+              </IconButton>
+            }
+            {props.project.repositoryDTOList.find(x=> x.type == "sonar") &&
+              <IconButton aria-label="SonarQube">
+                <GpsFixedIcon />
+              </IconButton>
+            }
           </CardActions>
         }
       </CardActionArea>
