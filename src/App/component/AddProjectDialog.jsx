@@ -7,7 +7,8 @@ import {
   DialogContentText,
   TextField,
   DialogActions,
-  Button
+  Button,
+  Select
 } from '@material-ui/core'
 
 export default function AddProjectDialog({ open, reloadProjects, handleClose }) {

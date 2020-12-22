@@ -55,9 +55,14 @@ export default function DrawingBoard(props) {
             ticks: {
               beginAtZero: true,
             },
+
           },
         ]
       }
+    }
+
+    if(props.maxBoardY) {
+      options.scales.yAxes[0].ticks.max = props.maxBoardY
     }
   
     return (

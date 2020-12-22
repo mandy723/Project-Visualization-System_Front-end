@@ -9,9 +9,9 @@ import { Menu,
   ExpandLess,
   ExpandMore,
   GitHub,
-  Code
+  Code,
+  GpsFixed
 } from '@material-ui/icons'
-import GpsFixedIcon from '@material-ui/icons/GpsFixed';
 import { 
   Drawer, 
   IconButton, 
@@ -206,7 +206,7 @@ function Sidebar(prop) {
         </Collapse>
         <ListItem button onClick={goToSonarQube}>
           <ListItemIcon>
-            <GpsFixedIcon />
+            <GpsFixed />
           </ListItemIcon>
           <ListItemText primary="SonarQube" />
         </ListItem>
