@@ -8,7 +8,6 @@ import { Menu,
   Search,
   ExpandLess,
   ExpandMore,
-  GitHub,
   Code,
   GpsFixed
 } from '@material-ui/icons'
@@ -26,8 +25,11 @@ import {
   InputBase,
   Collapse,
 } from '@material-ui/core'
-import { IoGitCommitSharp } from 'react-icons/io5'
+import { AiFillBug } from 'react-icons/ai'
+import { IoGitCommitSharp, IoNuclear } from 'react-icons/io5'
 import { GoIssueOpened } from 'react-icons/go'
+import { HiDocumentDuplicate } from 'react-icons/hi'
+import { SiGithub, SiSonarqube } from 'react-icons/si'
 import clsx from 'clsx'
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers'
 import MomentUtils from '@date-io/moment'
@@ -164,7 +166,8 @@ function Sidebar(prop) {
   const [open, setOpen] = React.useState(false)
   const history = useHistory()
   const classes = useStyles()
-  const [menuOpen, setMenuOpen] = useState(true)
+  const [githubMenuOpen, setGithubMenuOpen] = useState(true)
+  const [sonarMenuOpen, setSonarMenuOpen] = useState(true)
 
   const list = () => (
     <div className={classes.list} role="presentation" >
@@ -175,14 +178,14 @@ function Sidebar(prop) {
             </ListItemIcon>
             <ListItemText primary="Select"/>
         </ListItem>
-        <ListItem button onClick={() => {setMenuOpen(!menuOpen)}}>
+        <ListItem button onClick={() => {setGithubMenuOpen(!githubMenuOpen)}}>
           <ListItemIcon>
-            <GitHub />
+            <SiGithub size={30}/>
           </ListItemIcon>
           <ListItemText primary="GitHub" />
-          {menuOpen ? <ExpandLess /> : <ExpandMore />}
+          {githubMenuOpen ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
-        <Collapse in={menuOpen} timeout="auto" unmountOnExit>
+        <Collapse in={githubMenuOpen} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             <ListItem button className={classes.nested} onClick={goToCommit}>
               <ListItemIcon>
@@ -204,12 +207,42 @@ function Sidebar(prop) {
             </ListItem>
           </List>
         </Collapse>
-        <ListItem button onClick={goToSonarQube}>
+        <ListItem button onClick={() => {setSonarMenuOpen(!sonarMenuOpen)}}>
           <ListItemIcon>
-            <GpsFixed />
+            <SiSonarqube size={30} />
           </ListItemIcon>
           <ListItemText primary="SonarQube" />
+          {sonarMenuOpen ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
+        <Collapse in={sonarMenuOpen} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListItem button onClick={goToCodeCoverage}>
+              <ListItemIcon>
+                <GpsFixed />
+              </ListItemIcon>
+              <ListItemText primary="Code Coverage" />
+            </ListItem>
+            <ListItem button onClick={goToBug}>
+              <ListItemIcon>
+                <AiFillBug size={24.5}/>
+              </ListItemIcon>
+              <ListItemText primary="Bug" />
+            </ListItem>
+            <ListItem button onClick={goToCodeSmell}>
+              <ListItemIcon>
+                <IoNuclear size={24.5}/>
+              </ListItemIcon>
+              <ListItemText primary="Code Smell" />
+            </ListItem>
+            <ListItem button onClick={goToDuplication}>
+              <ListItemIcon>
+                <HiDocumentDuplicate size={24.5}/>
+              </ListItemIcon>
+              <ListItemText primary="Duplication" />
+            </ListItem>
+          </List>
+        </Collapse>
+        
 
         <ListItem className={classes.logout} button onClick={logout}>
             <ListItemIcon>
@@ -241,8 +274,20 @@ function Sidebar(prop) {
     history.push("/codebase")
   }
 
-  const goToSonarQube = () => {
-    history.push("/sonarqube")
+  const goToCodeCoverage = () => {
+    history.push("/code_coverage")
+  }
+
+  const goToBug = () => {
+    history.push("/bug")
+  }
+
+  const goToCodeSmell = () => {
+    history.push("/code_smell")
+  }
+
+  const goToDuplication = () => {
+    history.push("/duplication")
   }
 
   const handleDrawerOpen = () => {

@@ -20,11 +20,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-function SonarQubePage(prop) {
+function BugPage(prop) {
   const classes = useStyles()
-  const [coverageList, setCoverageList] = useState([])
+  const [bugList, setBugList] = useState([])
   const [currentProject, setCurrentProject] = useState({})
-  const [dataForCoverageChart, setDataForCoverageChart] = useState({ labels:[], data: { coverage: []} })
+  const [dataForBugChart, setDataForBugChart] = useState({ labels:[], data: { bug: []} })
  
   const projectId = localStorage.getItem("projectId")
   const [open, setOpen] = useState(false)
@@ -36,8 +36,8 @@ function SonarQubePage(prop) {
   };
 
   //TODO 這邊寫死的記得要改唷!!!! >////<
-  let coverageUrl = "http://140.124.181.143:9000/component_measures?id=ssl.ois%3Atimelog_api&metric=Coverage&view=list"
-  let sonarComponent = "ssl.ois:timelog_api"
+  let bugUrl = "http://140.124.181.143:9000/project/issues?id=pvs-springboot&resolved=false&types=BUG"
+  let sonarComponent = "pvs-springboot"
 
   useEffect(() => {
     Axios.get(`http://localhost:9100/pvs-api/project/1/${projectId}`)
@@ -51,9 +51,10 @@ function SonarQubePage(prop) {
   
   useEffect(() => {
     handleToggle()
-    Axios.get(`http://localhost:9100/pvs-api/sonar/${sonarComponent}/coverage`)
+    Axios.get(`http://localhost:9100/pvs-api/sonar/${sonarComponent}/bug`)
     .then((response) => {
-      setCoverageList(response.data)
+      console.log(response.data)
+      setBugList(response.data)
       handleClose()
     })
     .catch((error) => {
@@ -62,17 +63,17 @@ function SonarQubePage(prop) {
   }, [currentProject])
 
   useEffect(() => {
-    let chartDataset = { labels:[], data: { coverage: []} }
+    let chartDataset = { labels:[], data: { bug: []} }
 
-    coverageList.forEach(coverage => {
-      // chartDataset.labels.push(coverage.date)
+    bugList.forEach(bug => {
+      // chartDataset.labels.push(bug.date)
 
-      chartDataset.labels.push(moment(coverage.date).format("YYYY-MM-DD HH:mm:ss"))
-      chartDataset.data.coverage.push(coverage.value)
+      chartDataset.labels.push(moment(bug.date).format("YYYY-MM-DD HH:mm:ss"))
+      chartDataset.data.bug.push(bug.value)
     })
 
-    setDataForCoverageChart(chartDataset)
-  }, [coverageList, prop.startMonth, prop.endMonth])
+    setDataForBugChart(chartDataset)
+  }, [bugList, prop.startMonth, prop.endMonth])
 
   return(
     <div style={{marginLeft:"10px"}}>
@@ -80,13 +81,13 @@ function SonarQubePage(prop) {
         <CircularProgress color="inherit" />
       </Backdrop>
       <h1>{currentProject ? currentProject.projectName : ""}</h1>
-      <h2><a href={coverageUrl}>Coverage</a></h2>
+      <h2><a href={bugUrl} target="blank">Bug</a></h2>
       <div className={classes.root}>
         <div style={{width: "67%"}}>
           <div>
-            <h1>Coverage</h1>
+            <h1>Bug</h1>
             <div>
-              <DrawingBoard data={dataForCoverageChart} maxBoardY={100}/>
+              <DrawingBoard data={dataForBugChart} maxBoardY={Math.max(...dataForBugChart.data.bug)+5}/>
             </div>
           </div>
         </div>
@@ -102,4 +103,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(SonarQubePage)
+export default connect(mapStateToProps)(BugPage)
