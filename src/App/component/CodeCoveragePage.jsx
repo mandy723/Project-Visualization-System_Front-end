@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-function CodeCoverage(prop) {
+function CodeCoveragePage(prop) {
   const classes = useStyles()
   const [coverageList, setCoverageList] = useState([])
   const [currentProject, setCurrentProject] = useState({})
@@ -103,4 +103,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(CodeCoverage)
+export default connect(mapStateToProps)(CodeCoveragePage)

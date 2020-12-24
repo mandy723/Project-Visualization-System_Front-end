@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-function IssuePage(prop) {
+function IssuesPage(prop) {
 	const classes = useStyles()
   const [issueListData, setIssueListData] = useState([])
   const [dataForIssueChart, setDataForIssueChart] = useState({ labels:[], data: { created: [], closed: []} })
@@ -132,4 +132,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(IssuePage);
+export default connect(mapStateToProps)(IssuesPage);

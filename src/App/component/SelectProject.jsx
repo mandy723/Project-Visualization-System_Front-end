@@ -51,7 +51,7 @@ export default function SelectProject() {
   return (
     <div className={classes.root}>
       {projects.map( project =>
-        <ProjectAvatar size="large" project={project} />
+        <ProjectAvatar size="large" project={project} reloadProjects={loadProjects}/>
       )}
       <Card id="create-project-card">
         <CardActionArea onClick={() => setAddRepoDialogOpen(true)}>
@@ -60,7 +60,7 @@ export default function SelectProject() {
           </IconButton>
         </CardActionArea>
       </Card>
-      <AddProjectDialog 
+      <AddProjectDialog
         open={addRepoDialogOpen} 
         reloadProjects={loadProjects}
         handleClose={() => setAddRepoDialogOpen(false)}

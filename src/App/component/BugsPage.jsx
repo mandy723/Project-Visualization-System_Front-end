@@ -20,11 +20,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-function CodeSmellPage(prop) {
+function BugsPage(prop) {
   const classes = useStyles()
-  const [codeSmellList, setCodeSmellList] = useState([])
+  const [bugList, setBugList] = useState([])
   const [currentProject, setCurrentProject] = useState({})
-  const [dataForCodeSmellChart, setDataForCodeSmellChart] = useState({ labels:[], data: { codeSmell: []} })
+  const [dataForBugChart, setDataForBugChart] = useState({ labels:[], data: { bug: []} })
  
   const projectId = localStorage.getItem("projectId")
   const [open, setOpen] = useState(false)
@@ -36,7 +36,7 @@ function CodeSmellPage(prop) {
   };
 
   //TODO 這邊寫死的記得要改唷!!!! >////<
-  let codeSmellUrl = "http://140.124.181.143:9000/project/issues?id=pvs-springboot&resolved=false&types=CODE_SMELL"
+  let bugUrl = "http://140.124.181.143:9000/project/issues?id=pvs-springboot&resolved=false&types=BUG"
   let sonarComponent = "pvs-springboot"
 
   useEffect(() => {
@@ -51,10 +51,10 @@ function CodeSmellPage(prop) {
   
   useEffect(() => {
     handleToggle()
-    Axios.get(`http://localhost:9100/pvs-api/sonar/${sonarComponent}/code_smell`)
+    Axios.get(`http://localhost:9100/pvs-api/sonar/${sonarComponent}/bug`)
     .then((response) => {
       console.log(response.data)
-      setCodeSmellList(response.data)
+      setBugList(response.data)
       handleClose()
     })
     .catch((error) => {
@@ -63,17 +63,17 @@ function CodeSmellPage(prop) {
   }, [currentProject])
 
   useEffect(() => {
-    let chartDataset = { labels:[], data: { codeSmell: []} }
+    let chartDataset = { labels:[], data: { bug: []} }
 
-    codeSmellList.forEach(codeSmell => {
-      // chartDataset.labels.push(codeSmell.date)
+    bugList.forEach(bug => {
+      // chartDataset.labels.push(bug.date)
 
-      chartDataset.labels.push(moment(codeSmell.date).format("YYYY-MM-DD HH:mm:ss"))
-      chartDataset.data.codeSmell.push(codeSmell.value)
+      chartDataset.labels.push(moment(bug.date).format("YYYY-MM-DD HH:mm:ss"))
+      chartDataset.data.bug.push(bug.value)
     })
 
-    setDataForCodeSmellChart(chartDataset)
-  }, [codeSmellList, prop.startMonth, prop.endMonth])
+    setDataForBugChart(chartDataset)
+  }, [bugList, prop.startMonth, prop.endMonth])
 
   return(
     <div style={{marginLeft:"10px"}}>
@@ -81,13 +81,13 @@ function CodeSmellPage(prop) {
         <CircularProgress color="inherit" />
       </Backdrop>
       <h1>{currentProject ? currentProject.projectName : ""}</h1>
-      <h2><a href={codeSmellUrl} target="blank">Code Smell</a></h2>
+      <h2><a href={bugUrl} target="blank">Bugs</a></h2>
       <div className={classes.root}>
         <div style={{width: "67%"}}>
           <div>
-            <h1>Code Smell</h1>
+            <h1>Bugs</h1>
             <div>
-              <DrawingBoard data={dataForCodeSmellChart} maxBoardY={Math.max(...dataForCodeSmellChart.data.codeSmell)+5}/>
+              <DrawingBoard data={dataForBugChart} maxBoardY={Math.max(...dataForBugChart.data.bug)+5}/>
             </div>
           </div>
         </div>
@@ -103,4 +103,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(CodeSmellPage)
+export default connect(mapStateToProps)(BugsPage)

@@ -30,6 +30,7 @@ import { IoGitCommitSharp, IoNuclear } from 'react-icons/io5'
 import { GoIssueOpened } from 'react-icons/go'
 import { HiDocumentDuplicate } from 'react-icons/hi'
 import { SiGithub, SiSonarqube } from 'react-icons/si'
+import { RiDashboardFill } from 'react-icons/ri'
 import clsx from 'clsx'
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers'
 import MomentUtils from '@date-io/moment'
@@ -157,8 +158,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-
-
 function Sidebar(prop) {
   //todo seperate sidebar and appbar~~~ 
   
@@ -178,6 +177,12 @@ function Sidebar(prop) {
             </ListItemIcon>
             <ListItemText primary="Select"/>
         </ListItem>
+        <ListItem button onClick={goToDashBoard}>
+            <ListItemIcon>
+                <RiDashboardFill size={30}/>
+            </ListItemIcon>
+            <ListItemText primary="DashBoard"/>
+        </ListItem>
         <ListItem button onClick={() => {setGithubMenuOpen(!githubMenuOpen)}}>
           <ListItemIcon>
             <SiGithub size={30}/>
@@ -191,13 +196,13 @@ function Sidebar(prop) {
               <ListItemIcon>
                 <IoGitCommitSharp size={24.5}/>
               </ListItemIcon>
-              <ListItemText primary="Commit" />
+              <ListItemText primary="Commits" />
             </ListItem>
             <ListItem button className={classes.nested} onClick={goToIssue}>
               <ListItemIcon>
                 <GoIssueOpened size={24.5}/>
               </ListItemIcon>
-              <ListItemText primary="Issue" />
+              <ListItemText primary="Issues" />
             </ListItem>
             <ListItem button className={classes.nested} onClick={goToCodeBase}>
               <ListItemIcon>
@@ -226,24 +231,23 @@ function Sidebar(prop) {
               <ListItemIcon>
                 <AiFillBug size={24.5}/>
               </ListItemIcon>
-              <ListItemText primary="Bug" />
+              <ListItemText primary="Bugs" />
             </ListItem>
             <ListItem button onClick={goToCodeSmell}>
               <ListItemIcon>
                 <IoNuclear size={24.5}/>
               </ListItemIcon>
-              <ListItemText primary="Code Smell" />
+              <ListItemText primary="Code Smells" />
             </ListItem>
             <ListItem button onClick={goToDuplication}>
               <ListItemIcon>
                 <HiDocumentDuplicate size={24.5}/>
               </ListItemIcon>
-              <ListItemText primary="Duplication" />
+              <ListItemText primary="Duplications" />
             </ListItem>
           </List>
         </Collapse>
         
-
         <ListItem className={classes.logout} button onClick={logout}>
             <ListItemIcon>
                 <ExitToApp/>
@@ -262,12 +266,16 @@ function Sidebar(prop) {
     history.push("/select")
   }
 
+  const goToDashBoard = () => {
+    history.push("/dashboard")
+  }
+
   const goToCommit = () => {
-    history.push("/commit")
+    history.push("/commits")
   }
 
   const goToIssue = () => {
-    history.push("/issue")
+    history.push("/issues")
   }
 
   const goToCodeBase = () => {
@@ -279,15 +287,15 @@ function Sidebar(prop) {
   }
 
   const goToBug = () => {
-    history.push("/bug")
+    history.push("/bugs")
   }
 
   const goToCodeSmell = () => {
-    history.push("/code_smell")
+    history.push("/code_smells")
   }
 
   const goToDuplication = () => {
-    history.push("/duplication")
+    history.push("/duplications")
   }
 
   const handleDrawerOpen = () => {

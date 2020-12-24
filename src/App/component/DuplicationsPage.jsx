@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-function DuplicationPage(prop) {
+function DuplicationsPage(prop) {
   const classes = useStyles()
   const [duplicationList, setDuplicationList] = useState([])
   const [currentProject, setCurrentProject] = useState({})
@@ -81,11 +81,11 @@ function DuplicationPage(prop) {
         <CircularProgress color="inherit" />
       </Backdrop>
       <h1>{currentProject ? currentProject.projectName : ""}</h1>
-      <h2><a href={duplicationUrl} target="blank">Duplication</a></h2>
+      <h2><a href={duplicationUrl} target="blank">Duplications</a></h2>
       <div className={classes.root}>
         <div style={{width: "67%"}}>
           <div>
-            <h1>Duplication</h1>
+            <h1>Duplications</h1>
             <div>
               <DrawingBoard data={dataForDuplicationChart} maxBoardY={100}/>
             </div>
@@ -103,4 +103,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(DuplicationPage)
+export default connect(mapStateToProps)(DuplicationsPage)

@@ -7,8 +7,6 @@ import moment from 'moment'
 import { CircularProgress, Backdrop } from '@material-ui/core'
 import { connect } from 'react-redux';
 
-
-
 const useStyles = makeStyles((theme) => ({
     root: {
       display: 'flex',

@@ -14,6 +14,7 @@ export default function DrawingBoard(props) {
         let _backgroundColor = getRandomColor()
         if (props.color) {
           _backgroundColor = `${props.color}`
+          // #bce7c5
         }
         let datasets = Object.keys(props.data.data).map(key => {
           return {

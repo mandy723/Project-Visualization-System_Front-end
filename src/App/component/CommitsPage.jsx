@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-function CommitPage(prop) {
+function CommitsPage(prop) {
 	const classes = useStyles()
   const [commitListData, setCommitListData] = useState([])
   const [dataForTeamCommitChart, setDataForTeamCommitChart] = useState({ labels:[], data: { team: []} })
@@ -164,4 +164,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(CommitPage);
+export default connect(mapStateToProps)(CommitsPage);

@@ -4,6 +4,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Box, CardActionArea, Avatar, CardActions, IconButton } from '@material-ui/core'
 import GitHubIcon from '@material-ui/icons/GitHub';
 import GpsFixedIcon from '@material-ui/icons/GpsFixed';
+import AddIcon from '@material-ui/icons/Add';
+import AddRepositoryDialog from './AddRepositoryDialog';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -32,36 +34,72 @@ function ProjectAvatar(props) {
   const history = useHistory()
 
 
+  const [addRepoDialogOpen, setAddRepoDialogOpen] = useState(false)
   
+  const [wantedRepoType, setWantedRepoType] = useState("")
+
   const goToCommit = () => {
     localStorage.setItem("projectId", props.project.projectId)
 
-    history.push("/commit")
+    history.push("/commits")
+  }
+
+  const goToCodeCoverage = () => {
+    localStorage.setItem("projectId", props.project.projectId)
+
+    history.push("/code_coverage")
+  }
+
+  const goToDashboard = () => {
+    localStorage.setItem("projectId", props.project.projectId)
+
+    history.push("/dashboard")
+  }
+
+  const showAddRepoDialog = () => {
+    if(props.project.repositoryDTOList.find(x=> x.type == "github")){
+      setWantedRepoType("sonar")
+    } else{
+      setWantedRepoType("github")
+    }
+    setAddRepoDialogOpen(true)
   }
   
   return (
+    <div>
     <Box className={props.size==='large' ? classes.large : classes.small}>
-      <CardActionArea onClick={goToCommit}>
+      <CardActionArea onClick={goToDashboard}>
         <Avatar alt="first repository" src={props.project.avatarURL} className={classes.avatar}/>
         {props.size === 'large' &&
-          <p style={{"text-align":"center"}}>{props.project.projectName}</p>
+          <p style={{"textAlign":"center"}}>{props.project.projectName}</p>
         }
-        {props.size === 'large' && 
+      </CardActionArea>
+      {props.size === 'large' && 
           <CardActions disableSpacing>
             {props.project.repositoryDTOList.find(x=> x.type == "github") &&
-              <IconButton aria-label="GitHub">
+              <IconButton aria-label="GitHub" onClick={goToCommit}>
                 <GitHubIcon />
               </IconButton>
             }
             {props.project.repositoryDTOList.find(x=> x.type == "sonar") &&
-              <IconButton aria-label="SonarQube">
+              <IconButton aria-label="SonarQube" onClick={goToCodeCoverage}>
                 <GpsFixedIcon />
               </IconButton>
             }
+            <IconButton aria-label="Add Repository" onClick={showAddRepoDialog}>
+              <AddIcon/>
+            </IconButton>
           </CardActions>
         }
-      </CardActionArea>
     </Box>
+    <AddRepositoryDialog
+    open={addRepoDialogOpen} 
+    reloadProjects={props.reloadProjects}
+    handleClose={() => setAddRepoDialogOpen(false)}
+    projectId={props.project.projectId}
+    repoType={wantedRepoType}
+  />
+  </div>//:()
   )
 }
 
