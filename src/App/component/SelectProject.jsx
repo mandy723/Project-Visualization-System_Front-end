@@ -4,6 +4,8 @@ import Axios from 'axios';
 import { 
   Card, 
   CardActionArea, 
+  CardActions, 
+  Divider, 
   IconButton
 } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
@@ -49,22 +51,27 @@ export default function SelectProject() {
   }, [])
 
   return (
-    <div className={classes.root}>
-      {projects.map( project =>
-        <ProjectAvatar size="large" project={project} reloadProjects={loadProjects}/>
-      )}
-      <Card id="create-project-card">
-        <CardActionArea onClick={() => setAddRepoDialogOpen(true)}>
-          <IconButton color="primary" className={classes.large}  disabled>
-            <Add className={classes.small}/>
-          </IconButton>
-        </CardActionArea>
-      </Card>
-      <AddProjectDialog
-        open={addRepoDialogOpen} 
-        reloadProjects={loadProjects}
-        handleClose={() => setAddRepoDialogOpen(false)}
-      />
+    <div>
+      <h1>Projects</h1>
+    
+      <div className={classes.root}>
+        {projects.map( project =>
+          <ProjectAvatar size="large" project={project} reloadProjects={loadProjects}/>
+        )}
+        <Card id="create-project-card">
+          <CardActionArea onClick={() => setAddRepoDialogOpen(true)}>
+            <IconButton color="primary" className={classes.large}  disabled>
+              <Add className={classes.small}/>
+            </IconButton>
+          </CardActionArea>
+
+        </Card>
+        <AddProjectDialog
+            open={addRepoDialogOpen} 
+            reloadProjects={loadProjects}
+            handleClose={() => setAddRepoDialogOpen(false)}
+            />
+      </div>
     </div>
   )
 }

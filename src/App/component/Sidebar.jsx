@@ -24,6 +24,7 @@ import {
   Divider,
   InputBase,
   Collapse,
+  Tooltip 
 } from '@material-ui/core'
 import { AiFillBug } from 'react-icons/ai'
 import { IoGitCommitSharp, IoNuclear } from 'react-icons/io5'
@@ -137,14 +138,16 @@ const useStyles = makeStyles((theme) => ({
   },
   list: {
     width: 200,
-    height: 'calc(100%)'
+    height: 'calc(100%)',
+    width: 'auto'
   },
+
   logout: {
     position: "absolute",
-    bottom: 0
+    bottom: 0,
   },
   menuList: {
-    height: 'calc(100%)'
+    height: 'calc(100%)',
   },
   monthSelector: {
     // marginRight: -10,
@@ -155,6 +158,12 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       backgroundColor: fade(theme.palette.common.white, 0.25),
     }
+  },
+  divider: {
+    // backgroundColor: "#bdbdbd"
+  },
+  innerList:{
+    backgroundColor: "#fafafa"
   }
 }))
 
@@ -170,82 +179,111 @@ function Sidebar(prop) {
 
   const list = () => (
     <div className={classes.list} role="presentation" >
-      <List className={classes.menuList}>
-        <ListItem button onClick={goToSelect}>
-            <ListItemIcon>
-                <ArrowBack/>
-            </ListItemIcon>
-            <ListItemText primary="Select"/>
-        </ListItem>
+      <List className={classes.menuList} width="inher">
+        <Tooltip title="Select" placement="down" disableHoverListener={open}>
+          <ListItem button onClick={goToSelect}>
+              <ListItemIcon>
+                  <ArrowBack/>
+              </ListItemIcon>
+              <ListItemText primary="Select"/>
+          </ListItem>
+        </Tooltip>
+
+        <Divider className={classes.divider} />
         <ListItem button onClick={goToDashBoard}>
             <ListItemIcon>
                 <RiDashboardFill size={30}/>
             </ListItemIcon>
             <ListItemText primary="DashBoard"/>
         </ListItem>
+        <Divider className={classes.divider} />
         <ListItem button onClick={() => {setGithubMenuOpen(!githubMenuOpen)}}>
           <ListItemIcon>
             <SiGithub size={30}/>
           </ListItemIcon>
-          <ListItemText primary="GitHub" />
+          <ListItemText primary="GitHub"/>
           {githubMenuOpen ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
+        <Divider />
         <Collapse in={githubMenuOpen} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItem button className={classes.nested} onClick={goToCommit}>
-              <ListItemIcon>
-                <IoGitCommitSharp size={24.5}/>
-              </ListItemIcon>
-              <ListItemText primary="Commits" />
-            </ListItem>
-            <ListItem button className={classes.nested} onClick={goToIssue}>
-              <ListItemIcon>
-                <GoIssueOpened size={24.5}/>
-              </ListItemIcon>
-              <ListItemText primary="Issues" />
-            </ListItem>
-            <ListItem button className={classes.nested} onClick={goToCodeBase}>
-              <ListItemIcon>
-                 <Code />
-              </ListItemIcon>
-              <ListItemText primary="Code Base" />
-            </ListItem>
+          <List component="div" disablePadding className={classes.innerList}>
+            <Tooltip title="Commits" placement="down" disableHoverListener={open}>
+              <ListItem button className={classes.nested} onClick={goToCommit}>
+                <ListItemIcon>
+                  <IoGitCommitSharp size={24.5}/>
+                </ListItemIcon>
+                <ListItemText primary="Commits" />
+              </ListItem>
+            </Tooltip>
+
+            <Tooltip title="Issues" placement="down" disableHoverListener={open}>
+              <ListItem button className={classes.nested} onClick={goToIssue}>
+                <ListItemIcon>
+                  <GoIssueOpened size={24.5}/>
+                </ListItemIcon>
+                <ListItemText primary="Issues" />
+              </ListItem>
+            </Tooltip>
+        
+            <Tooltip title="Code Base" placement="down" disableHoverListener={open}>
+              <ListItem button className={classes.nested} onClick={goToCodeBase}>
+                <ListItemIcon>
+                  <Code />
+                </ListItemIcon>
+                <ListItemText primary="Code Base" />
+              </ListItem>
+            </Tooltip>
           </List>
         </Collapse>
-        <ListItem button onClick={() => {setSonarMenuOpen(!sonarMenuOpen)}}>
+        <Divider className={classes.divider}/>
+        <ListItem button onClick={() => {setSonarMenuOpen(!sonarMenuOpen)}} >
+          
           <ListItemIcon>
             <SiSonarqube size={30} />
           </ListItemIcon>
           <ListItemText primary="SonarQube" />
           {sonarMenuOpen ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
+        <Divider />
         <Collapse in={sonarMenuOpen} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItem button onClick={goToCodeCoverage}>
-              <ListItemIcon>
-                <GpsFixed />
-              </ListItemIcon>
-              <ListItemText primary="Code Coverage" />
-            </ListItem>
-            <ListItem button onClick={goToBug}>
-              <ListItemIcon>
-                <AiFillBug size={24.5}/>
-              </ListItemIcon>
-              <ListItemText primary="Bugs" />
-            </ListItem>
-            <ListItem button onClick={goToCodeSmell}>
-              <ListItemIcon>
-                <IoNuclear size={24.5}/>
-              </ListItemIcon>
-              <ListItemText primary="Code Smells" />
-            </ListItem>
-            <ListItem button onClick={goToDuplication}>
-              <ListItemIcon>
-                <HiDocumentDuplicate size={24.5}/>
-              </ListItemIcon>
-              <ListItemText primary="Duplications" />
-            </ListItem>
+          <List component="div" disablePadding className={classes.innerList}>
+            <Tooltip title="Code Coverage" placement="down" disableHoverListener={open}>
+              <ListItem button onClick={goToCodeCoverage} >
+                <ListItemIcon>
+                  <GpsFixed />
+                </ListItemIcon>
+                <ListItemText primary="Code Coverage" />
+              </ListItem>
+            </Tooltip>
+
+            <Tooltip title="Bugs" placement="down" disableHoverListener={open}>
+              <ListItem button onClick={goToBug}>
+                <ListItemIcon>
+                  <AiFillBug size={24.5}/>
+                </ListItemIcon>
+                <ListItemText primary="Bugs" />
+              </ListItem>
+            </Tooltip>
+
+            <Tooltip title="Code Smells" placement="down" disableHoverListener={open}>
+              <ListItem button onClick={goToCodeSmell}>
+                <ListItemIcon>
+                  <IoNuclear size={24.5}/>
+                </ListItemIcon>
+                <ListItemText primary="Code Smells" />
+              </ListItem>
+            </Tooltip>
+
+            <Tooltip title="Duplications" placement="down" disableHoverListener={open}>
+              <ListItem button onClick={goToDuplication}>
+                <ListItemIcon>
+                  <HiDocumentDuplicate size={24.5}/>
+                </ListItemIcon>
+                <ListItemText primary="Duplications" />
+              </ListItem>
+            </Tooltip>
           </List>
+        <Divider />
         </Collapse>
         
         <ListItem className={classes.logout} button onClick={logout}>
@@ -299,10 +337,12 @@ function Sidebar(prop) {
   }
 
   const handleDrawerOpen = () => {
+    // setIsDrawOpen(true)
     setOpen(true)
   }
 
   const handleDrawerClose = () => {
+    // setIsDrawOpen()
     setOpen(false)
   }
 
@@ -364,7 +404,7 @@ function Sidebar(prop) {
                     label="End Month and Year"
                     value={prop.endMonth}
                     onChange={prop.setEndMonth}
-                    // autoOk
+           
                 />
               </MuiPickersUtilsProvider>
             </div>

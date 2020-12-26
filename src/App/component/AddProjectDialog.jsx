@@ -61,6 +61,7 @@ export default function AddProjectDialog({ open, reloadProjects, handleClose }) 
               type="text"
               fullWidth
               onChange = {(e) => {setRepositoryURL(e.target.value)}}
+              required
             />
           </DialogContent>
           <DialogActions>

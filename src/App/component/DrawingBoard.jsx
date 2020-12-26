@@ -4,25 +4,41 @@ import { Line } from "react-chartjs-2"
 export default function DrawingBoard(props) {
   
     const [data, setData] = useState({})
-
-    const getRandomColor = () => {
-      return `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`
+    
+    let i = -1
+    let _backgroundColor = ""
+    
+    const getColor = () => {
+      let colorChips =["#85c446", "#bce7c5", "#fdbd10", "#0066b2", "#ed7902", "#0085ad", "#009f4d", "#335238" ,"#c68143" ,"#ec1c24"]
+      i++
+      let boardColor = `${colorChips[i]}`
+      _backgroundColor = boardColor
+      return props.isIssue ? props.color : boardColor
     }
+    
+    const isFilled = () => {
+      return props.isIssue ? "origin" : false
+    }
+
+
+    // const getRandomColor = () => {
+    //   return `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`
+    // }
 
     useEffect(() => {
       if (props.data) {
-        let _backgroundColor = getRandomColor()
-        if (props.color) {
-          _backgroundColor = `${props.color}`
-          // #bce7c5
-        }
+        // let _backgroundColor = getColor()
+        // if (props.color) {
+        //   _backgroundColor = `${props.color}`
+        //   // #bce7c5
+        // }
         let datasets = Object.keys(props.data.data).map(key => {
           return {
             label: key,
-            fill: "origin",
-            borderColor: getRandomColor(),
+            fill: isFilled(),
+            borderColor: getColor(),
             backgroundColor: _backgroundColor,
-            borderWidth: 1,
+            borderWidth: 2,
             pointRadius: 2,
             data: props.data.data[key],
             tension: 0
