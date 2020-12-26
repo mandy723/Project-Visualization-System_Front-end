@@ -35,36 +35,43 @@ function ProjectAvatar(props) {
 
 
   const [addRepoDialogOpen, setAddRepoDialogOpen] = useState(false)
-  
   const [wantedRepoType, setWantedRepoType] = useState("")
+  const [hasGithubRepo, setHasGithubRepo] = useState(false)
+  const [hasSonarRepo, setHasSonarRepo] = useState(false)
+
+  useEffect(() => {
+    if(props.size === 'large') {
+      setHasGithubRepo(props.project.repositoryDTOList.find(x=> x.type == "github") != undefined)
+      setHasSonarRepo(props.project.repositoryDTOList.find(x=> x.type == "sonar") != undefined)
+  
+      if(hasGithubRepo) {
+        setWantedRepoType("sonar")
+      } else if (hasSonarRepo) {
+        setWantedRepoType("github")
+      }
+    }
+  }, [props.project])
 
   const goToCommit = () => {
     localStorage.setItem("projectId", props.project.projectId)
-
     history.push("/commits")
   }
 
   const goToCodeCoverage = () => {
     localStorage.setItem("projectId", props.project.projectId)
-
     history.push("/code_coverage")
   }
 
   const goToDashboard = () => {
     localStorage.setItem("projectId", props.project.projectId)
-
     history.push("/dashboard")
   }
 
   const showAddRepoDialog = () => {
-    if(props.project.repositoryDTOList.find(x=> x.type == "github")){
-      setWantedRepoType("sonar")
-    } else{
-      setWantedRepoType("github")
-    }
+
     setAddRepoDialogOpen(true)
   }
-  
+
   return (
     <div>
     <Box className={props.size==='large' ? classes.large : classes.small}>
@@ -76,29 +83,31 @@ function ProjectAvatar(props) {
       </CardActionArea>
       {props.size === 'large' && 
           <CardActions disableSpacing>
-            {props.project.repositoryDTOList.find(x=> x.type == "github") &&
+            {hasGithubRepo &&
               <IconButton aria-label="GitHub" onClick={goToCommit}>
                 <GitHubIcon />
               </IconButton>
             }
-            {props.project.repositoryDTOList.find(x=> x.type == "sonar") &&
+            {hasSonarRepo &&
               <IconButton aria-label="SonarQube" onClick={goToCodeCoverage}>
                 <GpsFixedIcon />
               </IconButton>
             }
-            <IconButton aria-label="Add Repository" onClick={showAddRepoDialog}>
-              <AddIcon/>
-            </IconButton>
+            {(!hasGithubRepo || !hasSonarRepo) &&
+              <IconButton aria-label="Add Repository" onClick={showAddRepoDialog}>
+                <AddIcon/>
+              </IconButton>
+            }
           </CardActions>
         }
     </Box>
     <AddRepositoryDialog
-    open={addRepoDialogOpen} 
-    reloadProjects={props.reloadProjects}
-    handleClose={() => setAddRepoDialogOpen(false)}
-    projectId={props.project.projectId}
-    repoType={wantedRepoType}
-  />
+      open={addRepoDialogOpen} 
+      reloadProjects={props.reloadProjects}
+      handleClose={() => setAddRepoDialogOpen(false)}
+      projectId={props.project.projectId}
+      repoType={wantedRepoType}
+    />
   </div>//:()
   )
 }

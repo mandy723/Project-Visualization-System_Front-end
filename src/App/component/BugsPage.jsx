@@ -23,7 +23,8 @@ const useStyles = makeStyles((theme) => ({
 function BugsPage(prop) {
   const classes = useStyles()
   const [bugList, setBugList] = useState([])
-  const [currentProject, setCurrentProject] = useState({})
+  const [currentProject, setCurrentProject] = useState(undefined)
+  const [bugUrl, setBugUrl] = useState("")
   const [dataForBugChart, setDataForBugChart] = useState({ labels:[], data: { bug: []} })
  
   const projectId = localStorage.getItem("projectId")
@@ -36,8 +37,6 @@ function BugsPage(prop) {
   };
 
   //TODO 這邊寫死的記得要改唷!!!! >////<
-  let bugUrl = "http://140.124.181.143:9000/project/issues?id=pvs-springboot&resolved=false&types=BUG"
-  let sonarComponent = "pvs-springboot"
 
   useEffect(() => {
     Axios.get(`http://localhost:9100/pvs-api/project/1/${projectId}`)
@@ -51,28 +50,31 @@ function BugsPage(prop) {
   
   useEffect(() => {
     handleToggle()
-    Axios.get(`http://localhost:9100/pvs-api/sonar/${sonarComponent}/bug`)
-    .then((response) => {
-      console.log(response.data)
-      setBugList(response.data)
-      handleClose()
-    })
-    .catch((error) => {
-      console.error(error)
-    })
+    if(currentProject != undefined){
+      let repositoryDTO = currentProject.repositoryDTOList.find(x => x.type == "sonar")
+      let sonarComponent = repositoryDTO.url.split("id=")[1]
+      setBugUrl(`http://140.124.181.143:9000/project/issues?id=${sonarComponent}&resolved=false&types=BUG`)
+      Axios.get(`http://localhost:9100/pvs-api/sonar/${sonarComponent}/bug`)
+      .then((response) => {
+        setBugList(response.data)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+    }
   }, [currentProject])
 
   useEffect(() => {
     let chartDataset = { labels:[], data: { bug: []} }
 
     bugList.forEach(bug => {
-      // chartDataset.labels.push(bug.date)
-
       chartDataset.labels.push(moment(bug.date).format("YYYY-MM-DD HH:mm:ss"))
       chartDataset.data.bug.push(bug.value)
     })
 
     setDataForBugChart(chartDataset)
+    handleClose()
+
   }, [bugList, prop.startMonth, prop.endMonth])
 
   return(

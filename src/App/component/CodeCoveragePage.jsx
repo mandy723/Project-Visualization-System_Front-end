@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Component } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Axios from 'axios'
 import { CircularProgress, Backdrop } from '@material-ui/core'
@@ -23,9 +23,9 @@ const useStyles = makeStyles((theme) => ({
 function CodeCoveragePage(prop) {
   const classes = useStyles()
   const [coverageList, setCoverageList] = useState([])
-  const [currentProject, setCurrentProject] = useState({})
+  const [currentProject, setCurrentProject] = useState(undefined)
   const [dataForCoverageChart, setDataForCoverageChart] = useState({ labels:[], data: { coverage: []} })
- 
+  const [coverageUrl, setCoverageUrl] = useState("")
   const projectId = localStorage.getItem("projectId")
   const [open, setOpen] = useState(false)
   const handleClose = () => {
@@ -34,10 +34,6 @@ function CodeCoveragePage(prop) {
   const handleToggle = () => {
     setOpen(!open)
   };
-
-  //TODO 這邊寫死的記得要改唷!!!! >////<
-  let coverageUrl = "http://140.124.181.143:9000/component_measures?id=ssl.ois%3Atimelog_api&metric=Coverage&view=list"
-  let sonarComponent = "pvs-springboot"
 
   useEffect(() => {
     Axios.get(`http://localhost:9100/pvs-api/project/1/${projectId}`)
@@ -51,28 +47,29 @@ function CodeCoveragePage(prop) {
   
   useEffect(() => {
     handleToggle()
-    Axios.get(`http://localhost:9100/pvs-api/sonar/${sonarComponent}/coverage`)
-    .then((response) => {
-      console.log(response.data)
-      setCoverageList(response.data)
-      handleClose()
-    })
-    .catch((error) => {
-      console.error(error)
-    })
+    if(currentProject != undefined){
+      let repositoryDTO = currentProject.repositoryDTOList.find(x => x.type == "sonar")
+      let sonarComponent = repositoryDTO.url.split("id=")[1]    
+      setCoverageUrl(`http://140.124.181.143:9000/component_measures?id=${sonarComponent}&metric=Coverage&view=list`)
+      Axios.get(`http://localhost:9100/pvs-api/sonar/${sonarComponent}/coverage`)
+      .then((response) => {
+        setCoverageList(response.data)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+    }
   }, [currentProject])
 
   useEffect(() => {
     let chartDataset = { labels:[], data: { coverage: []} }
 
     coverageList.forEach(coverage => {
-      // chartDataset.labels.push(coverage.date)
-
       chartDataset.labels.push(moment(coverage.date).format("YYYY-MM-DD HH:mm:ss"))
       chartDataset.data.coverage.push(coverage.value)
     })
-
     setDataForCoverageChart(chartDataset)
+    handleClose()
   }, [coverageList, prop.startMonth, prop.endMonth])
 
   return(

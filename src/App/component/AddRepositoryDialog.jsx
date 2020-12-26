@@ -17,6 +17,7 @@ export default function AddRepositoryDialog({ open, reloadProjects, handleClose,
         alert("不準啦馬的>///<")
       } else {
         let payload = {
+          projectId: projectId,
           repositoryURL : repositoryURL
         }
         Axios.post(`http://localhost:9100/pvs-api/project/${projectId}/repository`, payload)

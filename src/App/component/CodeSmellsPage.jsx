@@ -23,7 +23,8 @@ const useStyles = makeStyles((theme) => ({
 function CodeSmellsPage(prop) {
   const classes = useStyles()
   const [codeSmellList, setCodeSmellList] = useState([])
-  const [currentProject, setCurrentProject] = useState({})
+  const [currentProject, setCurrentProject] = useState(undefined)
+  const [codeSmellUrl, setCodeSmellUrl] = useState("")
   const [dataForCodeSmellChart, setDataForCodeSmellChart] = useState({ labels:[], data: { codeSmell: []} })
  
   const projectId = localStorage.getItem("projectId")
@@ -34,10 +35,6 @@ function CodeSmellsPage(prop) {
   const handleToggle = () => {
     setOpen(!open)
   };
-
-  //TODO 這邊寫死的記得要改唷!!!! >////<
-  let codeSmellUrl = "http://140.124.181.143:9000/project/issues?id=pvs-springboot&resolved=false&types=CODE_SMELL"
-  let sonarComponent = "pvs-springboot"
 
   useEffect(() => {
     Axios.get(`http://localhost:9100/pvs-api/project/1/${projectId}`)
@@ -51,28 +48,31 @@ function CodeSmellsPage(prop) {
   
   useEffect(() => {
     handleToggle()
-    Axios.get(`http://localhost:9100/pvs-api/sonar/${sonarComponent}/code_smell`)
-    .then((response) => {
-      console.log(response.data)
-      setCodeSmellList(response.data)
-      handleClose()
-    })
-    .catch((error) => {
-      console.error(error)
-    })
+    if(currentProject != undefined) {
+      let repositoryDTO = currentProject.repositoryDTOList.find(x => x.type == "sonar")
+      let sonarComponent = repositoryDTO.url.split("id=")[1] 
+      setCodeSmellUrl(`http://140.124.181.143:9000/project/issues?id=${sonarComponent}&resolved=false&types=CODE_SMELL`)
+      Axios.get(`http://localhost:9100/pvs-api/sonar/${sonarComponent}/code_smell`)
+      .then((response) => {
+        setCodeSmellList(response.data)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+    }
   }, [currentProject])
 
   useEffect(() => {
     let chartDataset = { labels:[], data: { codeSmell: []} }
 
     codeSmellList.forEach(codeSmell => {
-      // chartDataset.labels.push(codeSmell.date)
-
       chartDataset.labels.push(moment(codeSmell.date).format("YYYY-MM-DD HH:mm:ss"))
       chartDataset.data.codeSmell.push(codeSmell.value)
     })
 
     setDataForCodeSmellChart(chartDataset)
+    handleClose()
+
   }, [codeSmellList, prop.startMonth, prop.endMonth])
 
   return(

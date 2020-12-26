@@ -23,7 +23,8 @@ const useStyles = makeStyles((theme) => ({
 function DuplicationsPage(prop) {
   const classes = useStyles()
   const [duplicationList, setDuplicationList] = useState([])
-  const [currentProject, setCurrentProject] = useState({})
+  const [currentProject, setCurrentProject] = useState(undefined)
+  const [duplicationUrl, setDuplicationUrl] = useState("")
   const [dataForDuplicationChart, setDataForDuplicationChart] = useState({ labels:[], data: { duplication: []} })
  
   const projectId = localStorage.getItem("projectId")
@@ -35,10 +36,7 @@ function DuplicationsPage(prop) {
     setOpen(!open)
   };
 
-  //TODO 這邊寫死的記得要改唷!!!! >////<
-  let duplicationUrl = "http://140.124.181.143:9000/component_measures?id=pvs-springboot&metric=Duplications&view=list"
-  let sonarComponent = "pvs-springboot"
-
+ 
   useEffect(() => {
     Axios.get(`http://localhost:9100/pvs-api/project/1/${projectId}`)
     .then(response => {
@@ -51,28 +49,31 @@ function DuplicationsPage(prop) {
   
   useEffect(() => {
     handleToggle()
-    Axios.get(`http://localhost:9100/pvs-api/sonar/${sonarComponent}/duplication`)
-    .then((response) => {
-      console.log(response.data)
-      setDuplicationList(response.data)
-      handleClose()
-    })
-    .catch((error) => {
-      console.error(error)
-    })
+    if(currentProject != undefined){
+      let repositoryDTO = currentProject.repositoryDTOList.find(x => x.type == "sonar")
+      let sonarComponent = repositoryDTO.url.split("id=")[1] 
+      setDuplicationUrl(`http://140.124.181.143:9000/component_measures?id=${sonarComponent}&metric=Duplications&view=list`)
+      Axios.get(`http://localhost:9100/pvs-api/sonar/${sonarComponent}/duplication`)
+      .then((response) => {
+        setDuplicationList(response.data)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+    }
   }, [currentProject])
 
   useEffect(() => {
     let chartDataset = { labels:[], data: { duplication: []} }
 
     duplicationList.forEach(duplication => {
-      // chartDataset.labels.push(duplication.date)
-
       chartDataset.labels.push(moment(duplication.date).format("YYYY-MM-DD HH:mm:ss"))
       chartDataset.data.duplication.push(duplication.value)
     })
 
     setDataForDuplicationChart(chartDataset)
+    handleClose()
+
   }, [duplicationList, prop.startMonth, prop.endMonth])
 
   return(
