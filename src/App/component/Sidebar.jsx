@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import logo_p from './../../p.png'
+import logo_v from './../../v.png'
+import logo_s from './../../s.png'
 import { useHistory } from 'react-router-dom'
 import { Menu, 
   ExitToApp, 
   ArrowBack, 
-  ChevronLeft, 
-  ChevronRight,
-  Search,
   ExpandLess,
   ExpandMore,
   Code,
@@ -22,7 +22,6 @@ import {
   AppBar,
   Toolbar,
   Divider,
-  InputBase,
   Collapse,
   Tooltip 
 } from '@material-ui/core'
@@ -50,14 +49,6 @@ const useStyles = makeStyles((theme) => ({
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
     }),
   },
   menuButton: {
@@ -100,42 +91,42 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
-      width: 'auto',
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputRoot: {
-    color: 'inherit',
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
+  // search: {
+  //   position: 'relative',
+  //   borderRadius: theme.shape.borderRadius,
+  //   backgroundColor: fade(theme.palette.common.white, 0.15),
+  //   '&:hover': {
+  //     backgroundColor: fade(theme.palette.common.white, 0.25),
+  //   },
+  //   marginRight: theme.spacing(2),
+  //   marginLeft: 0,
+  //   width: '100%',
+  //   [theme.breakpoints.up('sm')]: {
+  //     marginLeft: theme.spacing(3),
+  //     width: 'auto',
+  //   },
+  // },
+  // searchIcon: {
+  //   padding: theme.spacing(0, 2),
+  //   height: '100%',
+  //   position: 'absolute',
+  //   pointerEvents: 'none',
+  //   display: 'flex',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  // },
+  // inputRoot: {
+  //   color: 'inherit',
+  // },
+  // inputInput: {
+  //   padding: theme.spacing(1, 1, 1, 0),
+  //   paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+  //   transition: theme.transitions.create('width'),
+  //   width: '100%',
+  //   [theme.breakpoints.up('md')]: {
+  //     width: '20ch',
+  //   },
+  // },
   list: {
     width: 200,
     height: 'calc(100%)',
@@ -150,17 +141,8 @@ const useStyles = makeStyles((theme) => ({
     height: 'calc(100%)',
   },
   monthSelector: {
-    // marginRight: -10,
     width: 204, 
     padding: theme.spacing(0, 3, 0),
-    // borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    }
-  },
-  divider: {
-    // backgroundColor: "#bdbdbd"
   },
   innerList:{
     backgroundColor: "#fafafa"
@@ -171,15 +153,20 @@ function Sidebar(prop) {
   //todo seperate sidebar and appbar~~~ 
   
   const theme = useTheme()
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(true)
   const history = useHistory()
   const classes = useStyles()
   const [githubMenuOpen, setGithubMenuOpen] = useState(true)
   const [sonarMenuOpen, setSonarMenuOpen] = useState(true)
+  const isSelectPage = () =>{
+    return window.location.pathname == '/select' 
+  }
 
   const list = () => (
     <div className={classes.list} role="presentation" >
       <List className={classes.menuList} width="inher">
+        { !isSelectPage() &&
+        <div>
         <Tooltip title="Select" placement="down" disableHoverListener={open}>
           <ListItem button onClick={goToSelect}>
               <ListItemIcon>
@@ -188,7 +175,7 @@ function Sidebar(prop) {
               <ListItemText primary="Select"/>
           </ListItem>
         </Tooltip>
-
+      
         <Divider className={classes.divider} />
         <ListItem button onClick={goToDashBoard}>
             <ListItemIcon>
@@ -197,6 +184,7 @@ function Sidebar(prop) {
             <ListItemText primary="DashBoard"/>
         </ListItem>
         <Divider className={classes.divider} />
+         
         <ListItem button onClick={() => {setGithubMenuOpen(!githubMenuOpen)}}>
           <ListItemIcon>
             <SiGithub size={30}/>
@@ -204,6 +192,7 @@ function Sidebar(prop) {
           <ListItemText primary="GitHub"/>
           {githubMenuOpen ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
+        
         <Divider />
         <Collapse in={githubMenuOpen} timeout="auto" unmountOnExit>
           <List component="div" disablePadding className={classes.innerList}>
@@ -285,7 +274,9 @@ function Sidebar(prop) {
           </List>
         <Divider />
         </Collapse>
-        
+        </div>
+        }
+
         <ListItem className={classes.logout} button onClick={logout}>
             <ListItemIcon>
                 <ExitToApp/>
@@ -295,7 +286,7 @@ function Sidebar(prop) {
       </List>
     </div>
   )
-
+  
   const logout = () => {
 		history.push('/login')
   }
@@ -336,15 +327,10 @@ function Sidebar(prop) {
     history.push("/duplications")
   }
 
-  const handleDrawerOpen = () => {
-    // setIsDrawOpen(true)
-    setOpen(true)
-  }
 
-  const handleDrawerClose = () => {
-    // setIsDrawOpen()
-    setOpen(false)
-  }
+  useEffect(() => {
+    let projectId = localStorage.getItem("projectId")
+  },[])
 
   return (
     <div className={classes.root}>
@@ -356,35 +342,15 @@ function Sidebar(prop) {
         })}
       >
         <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton, {
-              [classes.hide]: open,
-            })}
-          >
-            <Menu />
-          </IconButton>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <Search />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div>
+          <img src={logo_p}/>
+          <img src={logo_v}/>
+          <img src={logo_s}/>
             <div className={classes.monthSelector}>
               <MuiPickersUtilsProvider utils={MomentUtils}>
-              <DatePicker
+              <DatePicker className={classes.datepicker}
                     fullWidth
                     // variant="inline"
+                    focused={false}
                     openTo="year"
                     views={["year", "month"]}
                     label="Start Month and Year"
@@ -399,6 +365,7 @@ function Sidebar(prop) {
                 <DatePicker
                     fullWidth
                     // variant="inline"
+                    focused={false}
                     openTo="year"
                     views={["year", "month"]}
                     label="End Month and Year"
@@ -423,11 +390,7 @@ function Sidebar(prop) {
           }),
         }}
       >
-        <div className={classes.drawerContent}>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRight /> : <ChevronLeft />}
-          </IconButton>
-        </div>
+        <div className={classes.drawerContent}></div>
         <Divider />
         {list()}
       </Drawer>
