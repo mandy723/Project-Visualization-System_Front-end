@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import logo_p from './../../p.png'
 import logo_v from './../../v.png'
 import logo_s from './../../s.png'
 import { useHistory } from 'react-router-dom'
-import { Menu, 
+import { 
   ExitToApp, 
   ArrowBack, 
   ExpandLess,
@@ -13,7 +13,6 @@ import { Menu,
 } from '@material-ui/icons'
 import { 
   Drawer, 
-  IconButton, 
   List, 
   ListItem, 
   ListItemText, 
@@ -23,7 +22,8 @@ import {
   Toolbar,
   Divider,
   Collapse,
-  Tooltip 
+  Tooltip,
+  IconButton
 } from '@material-ui/core'
 import { AiFillBug } from 'react-icons/ai'
 import { IoGitCommitSharp, IoNuclear } from 'react-icons/io5'
@@ -34,10 +34,10 @@ import { RiDashboardFill } from 'react-icons/ri'
 import clsx from 'clsx'
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers'
 import MomentUtils from '@date-io/moment'
-import { makeStyles, useTheme, fade } from '@material-ui/core/styles'
-import { useState } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
 import { setStartMonth, setEndMonth } from './../../redux/action'
+import Axios from 'axios'
 
 const drawerWidth = 240
 const useStyles = makeStyles((theme) => ({
@@ -134,8 +134,8 @@ const useStyles = makeStyles((theme) => ({
   },
 
   logout: {
-    position: "absolute",
-    bottom: 0,
+    position: 'absolute',
+    right: 0
   },
   menuList: {
     height: 'calc(100%)',
@@ -152,137 +152,124 @@ const useStyles = makeStyles((theme) => ({
 function Sidebar(prop) {
   //todo seperate sidebar and appbar~~~ 
   
-  const theme = useTheme()
   const [open, setOpen] = useState(true)
   const history = useHistory()
   const classes = useStyles()
+  const [currentProject, setCurrentProject] = useState(undefined)
   const [githubMenuOpen, setGithubMenuOpen] = useState(true)
   const [sonarMenuOpen, setSonarMenuOpen] = useState(true)
-  const isSelectPage = () =>{
-    return window.location.pathname == '/select' 
-  }
 
   const list = () => (
     <div className={classes.list} role="presentation" >
       <List className={classes.menuList} width="inher">
-        { !isSelectPage() &&
+        { prop.currentProjectId != 0 &&
         <div>
-        <Tooltip title="Select" placement="down" disableHoverListener={open}>
+          
           <ListItem button onClick={goToSelect}>
               <ListItemIcon>
                   <ArrowBack/>
               </ListItemIcon>
               <ListItemText primary="Select"/>
           </ListItem>
-        </Tooltip>
-      
-        <Divider className={classes.divider} />
-        <ListItem button onClick={goToDashBoard}>
-            <ListItemIcon>
-                <RiDashboardFill size={30}/>
-            </ListItemIcon>
-            <ListItemText primary="DashBoard"/>
-        </ListItem>
-        <Divider className={classes.divider} />
-         
-        <ListItem button onClick={() => {setGithubMenuOpen(!githubMenuOpen)}}>
-          <ListItemIcon>
-            <SiGithub size={30}/>
-          </ListItemIcon>
-          <ListItemText primary="GitHub"/>
-          {githubMenuOpen ? <ExpandLess /> : <ExpandMore />}
-        </ListItem>
-        
-        <Divider />
-        <Collapse in={githubMenuOpen} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding className={classes.innerList}>
-            <Tooltip title="Commits" placement="down" disableHoverListener={open}>
-              <ListItem button className={classes.nested} onClick={goToCommit}>
-                <ListItemIcon>
-                  <IoGitCommitSharp size={24.5}/>
-                </ListItemIcon>
-                <ListItemText primary="Commits" />
-              </ListItem>
-            </Tooltip>
-
-            <Tooltip title="Issues" placement="down" disableHoverListener={open}>
-              <ListItem button className={classes.nested} onClick={goToIssue}>
-                <ListItemIcon>
-                  <GoIssueOpened size={24.5}/>
-                </ListItemIcon>
-                <ListItemText primary="Issues" />
-              </ListItem>
-            </Tooltip>
-        
-            <Tooltip title="Code Base" placement="down" disableHoverListener={open}>
-              <ListItem button className={classes.nested} onClick={goToCodeBase}>
-                <ListItemIcon>
-                  <Code />
-                </ListItemIcon>
-                <ListItemText primary="Code Base" />
-              </ListItem>
-            </Tooltip>
-          </List>
-        </Collapse>
-        <Divider className={classes.divider}/>
-        <ListItem button onClick={() => {setSonarMenuOpen(!sonarMenuOpen)}} >
           
-          <ListItemIcon>
-            <SiSonarqube size={30} />
-          </ListItemIcon>
-          <ListItemText primary="SonarQube" />
-          {sonarMenuOpen ? <ExpandLess /> : <ExpandMore />}
-        </ListItem>
-        <Divider />
-        <Collapse in={sonarMenuOpen} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding className={classes.innerList}>
-            <Tooltip title="Code Coverage" placement="down" disableHoverListener={open}>
-              <ListItem button onClick={goToCodeCoverage} >
+        
+          <Divider className={classes.divider} />
+          <ListItem button onClick={goToDashBoard}>
+              <ListItemIcon>
+                  <RiDashboardFill size={30}/>
+              </ListItemIcon>
+              <ListItemText primary="DashBoard"/>
+          </ListItem>
+          <Divider className={classes.divider} />
+          
+          { currentProject &&
+            currentProject.repositoryDTOList.find(x => x.type == "github") &&
+            <div>
+              <ListItem button onClick={() => {setGithubMenuOpen(!githubMenuOpen)}}>
                 <ListItemIcon>
-                  <GpsFixed />
+                  <SiGithub size={30}/>
                 </ListItemIcon>
-                <ListItemText primary="Code Coverage" />
+                <ListItemText primary="GitHub"/>
+                {githubMenuOpen ? <ExpandLess /> : <ExpandMore />}
               </ListItem>
-            </Tooltip>
+              
+              <Divider />
+              <Collapse in={githubMenuOpen} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding className={classes.innerList}>
+                    <ListItem button className={classes.nested} onClick={goToCommit}>
+                      <ListItemIcon>
+                        <IoGitCommitSharp size={24.5}/>
+                      </ListItemIcon>
+                      <ListItemText primary="Commits" />
+                    </ListItem>
 
-            <Tooltip title="Bugs" placement="down" disableHoverListener={open}>
-              <ListItem button onClick={goToBug}>
-                <ListItemIcon>
-                  <AiFillBug size={24.5}/>
-                </ListItemIcon>
-                <ListItemText primary="Bugs" />
-              </ListItem>
-            </Tooltip>
+                    <ListItem button className={classes.nested} onClick={goToIssue}>
+                      <ListItemIcon>
+                        <GoIssueOpened size={24.5}/>
+                      </ListItemIcon>
+                      <ListItemText primary="Issues" />
+                    </ListItem>
+              
+                    <ListItem button className={classes.nested} onClick={goToCodeBase}>
+                      <ListItemIcon>
+                        <Code />
+                      </ListItemIcon>
+                      <ListItemText primary="Code Base" />
+                    </ListItem>
+                </List>
+              </Collapse>
+            </div>
+          }
 
-            <Tooltip title="Code Smells" placement="down" disableHoverListener={open}>
-              <ListItem button onClick={goToCodeSmell}>
-                <ListItemIcon>
-                  <IoNuclear size={24.5}/>
-                </ListItemIcon>
-                <ListItemText primary="Code Smells" />
-              </ListItem>
-            </Tooltip>
+          { currentProject &&
+            currentProject.repositoryDTOList.find(x => x.type == "sonar") &&
+            <div>
+            <Divider className={classes.divider}/>
+            <ListItem button onClick={() => {setSonarMenuOpen(!sonarMenuOpen)}} >
+              
+              <ListItemIcon>
+                <SiSonarqube size={30} />
+              </ListItemIcon>
+              <ListItemText primary="SonarQube" />
+              {sonarMenuOpen ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+            <Divider />
+            <Collapse in={sonarMenuOpen} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding className={classes.innerList}>
+                  <ListItem button onClick={goToCodeCoverage} >
+                    <ListItemIcon>
+                      <GpsFixed />
+                    </ListItemIcon>
+                    <ListItemText primary="Code Coverage" />
+                  </ListItem>
 
-            <Tooltip title="Duplications" placement="down" disableHoverListener={open}>
-              <ListItem button onClick={goToDuplication}>
-                <ListItemIcon>
-                  <HiDocumentDuplicate size={24.5}/>
-                </ListItemIcon>
-                <ListItemText primary="Duplications" />
-              </ListItem>
-            </Tooltip>
-          </List>
-        <Divider />
-        </Collapse>
+                  <ListItem button onClick={goToBug}>
+                    <ListItemIcon>
+                      <AiFillBug size={24.5}/>
+                    </ListItemIcon>
+                    <ListItemText primary="Bugs" />
+                  </ListItem>
+
+                  <ListItem button onClick={goToCodeSmell}>
+                    <ListItemIcon>
+                      <IoNuclear size={24.5}/>
+                    </ListItemIcon>
+                    <ListItemText primary="Code Smells" />
+                  </ListItem>
+
+                  <ListItem button onClick={goToDuplication}>
+                    <ListItemIcon>
+                      <HiDocumentDuplicate size={24.5}/>
+                    </ListItemIcon>
+                    <ListItemText primary="Duplications" />
+                  </ListItem>
+              </List>
+            <Divider />
+            </Collapse>
+            </div>
+          }
         </div>
         }
-
-        <ListItem className={classes.logout} button onClick={logout}>
-            <ListItemIcon>
-                <ExitToApp/>
-            </ListItemIcon>
-            <ListItemText primary="Logout"/>
-        </ListItem>
       </List>
     </div>
   )
@@ -329,8 +316,16 @@ function Sidebar(prop) {
 
 
   useEffect(() => {
-    let projectId = localStorage.getItem("projectId")
-  },[])
+    if(prop.currentProjectId != 0) {
+      Axios.get(`http://localhost:9100/pvs-api/project/1/${prop.currentProjectId}`)
+      .then((response) => {
+        setCurrentProject(response.data)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+    }
+  },[prop.currentProjectId])
 
   return (
     <div className={classes.root}>
@@ -349,14 +344,12 @@ function Sidebar(prop) {
               <MuiPickersUtilsProvider utils={MomentUtils}>
               <DatePicker className={classes.datepicker}
                     fullWidth
-                    // variant="inline"
                     focused={false}
                     openTo="year"
                     views={["year", "month"]}
                     label="Start Month and Year"
                     value={prop.startMonth}
                     onChange={prop.setStartMonth}
-                    // autoOk
                 />
               </MuiPickersUtilsProvider>
             </div>
@@ -364,17 +357,18 @@ function Sidebar(prop) {
               <MuiPickersUtilsProvider utils={MomentUtils}> 
                 <DatePicker
                     fullWidth
-                    // variant="inline"
                     focused={false}
                     openTo="year"
                     views={["year", "month"]}
                     label="End Month and Year"
                     value={prop.endMonth}
                     onChange={prop.setEndMonth}
-           
                 />
               </MuiPickersUtilsProvider>
             </div>
+            <IconButton className={classes.logout} onClick={logout}>
+              <ExitToApp/>
+            </IconButton>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -405,7 +399,8 @@ function Sidebar(prop) {
 const mapStateToProps = (state) => {
   return {
     startMonth: state.selectedMonth.startMonth,
-    endMonth: state.selectedMonth.endMonth
+    endMonth: state.selectedMonth.endMonth,
+    currentProjectId: state.currentProjectId
   }
 }
 

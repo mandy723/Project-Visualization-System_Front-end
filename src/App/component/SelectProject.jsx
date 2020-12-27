@@ -4,14 +4,14 @@ import Axios from 'axios';
 import { 
   Card, 
   CardActionArea, 
-  CardActions, 
-  Divider, 
   IconButton
 } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import ProjectAvatar from './ProjectAvatar';
 import { useEffect } from 'react';
 import AddProjectDialog from './AddProjectDialog';
+import { connect } from 'react-redux';
+import { setCurrentProjectId } from '../../redux/action';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function SelectProject() {
+function SelectProject({ setCurrentProjectId }) {
   const classes = useStyles()
   const [addRepoDialogOpen, setAddRepoDialogOpen] = useState(false)
   const [projects, setProjects] = useState([])
@@ -47,6 +47,7 @@ export default function SelectProject() {
   }
 
   useEffect(() => {
+    setCurrentProjectId(0)
     loadProjects();
   }, [])
 
@@ -75,3 +76,5 @@ export default function SelectProject() {
     </div>
   )
 }
+
+export default connect(null, {setCurrentProjectId})(SelectProject)

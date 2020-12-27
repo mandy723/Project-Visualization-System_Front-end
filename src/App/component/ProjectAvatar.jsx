@@ -6,6 +6,8 @@ import GitHubIcon from '@material-ui/icons/GitHub';
 import GpsFixedIcon from '@material-ui/icons/GpsFixed';
 import AddIcon from '@material-ui/icons/Add';
 import AddRepositoryDialog from './AddRepositoryDialog';
+import { connect } from 'react-redux'
+import { setCurrentProjectId } from '../../redux/action'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -54,16 +56,19 @@ function ProjectAvatar(props) {
 
   const goToCommit = () => {
     localStorage.setItem("projectId", props.project.projectId)
+    props.setCurrentProjectId(props.project.projectId)
     history.push("/commits")
   }
 
   const goToCodeCoverage = () => {
     localStorage.setItem("projectId", props.project.projectId)
+    props.setCurrentProjectId(props.project.projectId)
     history.push("/code_coverage")
   }
 
   const goToDashboard = () => {
     localStorage.setItem("projectId", props.project.projectId)
+    props.setCurrentProjectId(props.project.projectId)
     history.push("/dashboard")
   }
 
@@ -112,4 +117,4 @@ function ProjectAvatar(props) {
   )
 }
 
-export default ProjectAvatar;
+export default connect(null, {setCurrentProjectId})(ProjectAvatar);
