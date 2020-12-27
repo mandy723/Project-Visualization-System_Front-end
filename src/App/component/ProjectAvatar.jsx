@@ -42,12 +42,15 @@ function ProjectAvatar(props) {
 
   useEffect(() => {
     if(props.size === 'large') {
-      setHasGithubRepo(props.project.repositoryDTOList.find(x=> x.type == "github") != undefined)
-      setHasSonarRepo(props.project.repositoryDTOList.find(x=> x.type == "sonar") != undefined)
+      const githubRepo = props.project.repositoryDTOList.find(x=> x.type == "github")
+      const sonarRepo = props.project.repositoryDTOList.find(x=> x.type == "sonar")
+
+      setHasGithubRepo(githubRepo != undefined)
+      setHasSonarRepo(sonarRepo != undefined)
   
-      if(hasGithubRepo) {
+      if(githubRepo != undefined) {
         setWantedRepoType("sonar")
-      } else if (hasSonarRepo) {
+      } else if (sonarRepo != undefined) {
         setWantedRepoType("github")
       }
     }

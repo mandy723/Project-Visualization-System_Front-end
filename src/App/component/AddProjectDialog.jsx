@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import Axios from 'axios'
+import InputAdornment from '@material-ui/core/InputAdornment';
+import { SiGithub, SiSonarqube } from 'react-icons/si'
+
 import {
   Dialog,
   DialogTitle,
@@ -8,34 +11,81 @@ import {
   TextField,
   DialogActions,
   Button,
-  Select
 } from '@material-ui/core'
 
 export default function AddProjectDialog({ open, reloadProjects, handleClose }) {
     const [projectName, setProjectName] = useState("")
-    const [repositoryURL, setRepositoryURL] = useState("")
+    const [githubRepositoryURL, setGithubRepositoryURL] = useState("")
+    const [sonarRepositoryURL, setSonarRepositoryURL] = useState("")
+    const [isGithubAvailable, setIsGithubAvailable] = useState(false)
+    const [isSonarAvailable, setIsSonarAvailable] = useState(false)
+
     const createProject = () => {
-      if(projectName === "" || repositoryURL === "") {
+      let checker = []
+      if(projectName === "" || (githubRepositoryURL === "" && sonarRepositoryURL === "")) {
         alert("不準啦馬的>///<")
       } else {
-        let payload = {
-          projectName : projectName,
-          repositoryURL : repositoryURL
+        if(githubRepositoryURL !== "") {
+          checker.push(checkGithubRepositoryURL());
         }
-        Axios.post("http://localhost:9100/pvs-api/project", payload)
-           .then((response) => {
-             reloadProjects()
-             handleClose()
-           })
-           .catch((e) => {
-             console.error(e)
-           }) 
+        if(sonarRepositoryURL !== "") {
+          checker.push(checkSonarRepositoryURL());
+        }
+
+        Promise.all(checker)
+          .then((response)=> {
+            if(response.find(false) == undefined) {
+              let payload = {
+                projectName : projectName,
+                githubRepositoryURL : githubRepositoryURL,
+                sonarRepositoryURL : sonarRepositoryURL
+              }
+              
+              Axios.post("http://localhost:9100/pvs-api/project", payload)
+                 .then((response) => {
+                   reloadProjects()
+                   handleClose()
+                 })
+                 .catch((e) => {
+                   console.error(e)
+                 }) 
+            }
+          }).catch((e) => {
+            console.error(e)
+          })
       }
+    }
+
+    const checkGithubRepositoryURL = () => {
+      return Axios.get(`http://localhost:9100/pvs-api/repository/github/check?url=${githubRepositoryURL}`)
+      .then((response) => {
+        setIsGithubAvailable(true);
+        return true
+      })
+      .catch((e) => {
+        alert("github error")
+        console.error(e)
+        return false
+      }) 
+    }
+
+    const checkSonarRepositoryURL = () => {
+      return Axios.get(`http://localhost:9100/pvs-api/repository/sonar/check?url=${sonarRepositoryURL}`)
+      .then((response) => {
+        setIsSonarAvailable(true);
+        return true
+      })
+      .catch((e) => {
+        alert("sonar error")
+        console.error(e)
+        return false
+      }) 
     }
 
     useEffect(() => {
       setProjectName("")
-      setRepositoryURL("")
+      setGithubRepositoryURL("")
+      setSonarRepositoryURL("")
     }, [open])
     
     return (
@@ -56,12 +106,36 @@ export default function AddProjectDialog({ open, reloadProjects, handleClose }) 
             />
             <TextField
               margin="dense"
-              id="RepositoryURL"
-              label="Repository URL"
+              id="GithubRepositoryURL"
+              label="Github Repository URL"
               type="text"
               fullWidth
-              onChange = {(e) => {setRepositoryURL(e.target.value)}}
+              onChange = {(e) => {setGithubRepositoryURL(e.target.value)}}
               required
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SiGithub />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            
+            <TextField
+              margin="dense"
+              id="SonarRepositoryURL"
+              label="Sonar Repository URL"
+              type="text"
+              fullWidth
+              onChange = {(e) => {setSonarRepositoryURL(e.target.value)}}
+              required
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SiSonarqube />
+                  </InputAdornment>
+                ),
+              }}
             />
           </DialogContent>
           <DialogActions>

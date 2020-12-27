@@ -20,7 +20,7 @@ export default function AddRepositoryDialog({ open, reloadProjects, handleClose,
           projectId: projectId,
           repositoryURL : repositoryURL
         }
-        Axios.post(`http://localhost:9100/pvs-api/project/${projectId}/repository`, payload)
+        Axios.post(`http://localhost:9100/pvs-api/project/${projectId}/repository/${repoType}`, payload)
            .then((response) => {
              reloadProjects()
              handleClose()
