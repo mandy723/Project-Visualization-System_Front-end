@@ -25,3 +25,4 @@ jobs:
         with:
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           target_repo_url: git@ssl-gitlab.csie.ntut.edu.tw:timchang1005/pvs-react.git
+          ssh_username: ${{ secrets.SSH_USERNAME }} 
