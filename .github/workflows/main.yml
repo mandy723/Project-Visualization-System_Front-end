@@ -18,11 +18,10 @@ jobs:
     name: sync to Gitlab 
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
-        uses: actions/checkout@v2
+      - name: checkout MUST use version 1
+        uses: actions/checkout@v1
       - name: Mirroring Repository
         uses: pixta-dev/repository-mirroring-action@v1
         with:
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           target_repo_url: git@ssl-gitlab.csie.ntut.edu.tw:timchang1005/pvs-react.git
-          ssh_username: ${{ secrets.SSH_USERNAME }} 
