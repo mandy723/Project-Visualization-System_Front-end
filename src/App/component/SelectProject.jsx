@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
     '& > *': {
       margin: theme.spacing(1),
     },
+    flexWrap: 'wrap'
   },
   small: {
     width: theme.spacing(10),
@@ -28,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
   large: {
     width: theme.spacing(20),
     height: theme.spacing(25),
+  },
+  createProjectCard: {
+    height: theme.spacing(25)
   }
 }));
 
@@ -59,7 +63,7 @@ function SelectProject({ setCurrentProjectId }) {
         {projects.map( project =>
           <ProjectAvatar size="large" project={project} reloadProjects={loadProjects}/>
         )}
-        <Card id="create-project-card">
+        <Card id="create-project-card" className={classes.createProjectCard}>
           <CardActionArea onClick={() => setAddRepoDialogOpen(true)}>
             <IconButton color="primary" className={classes.large}  disabled>
               <Add className={classes.small}/>
