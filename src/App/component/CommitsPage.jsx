@@ -4,7 +4,7 @@ import ProjectAvatar from './ProjectAvatar'
 import DrawingBoard from './DrawingBoard'
 import Axios from 'axios'
 import moment from 'moment'
-import { CircularProgress, Backdrop } from '@material-ui/core'
+import { CircularProgress, Backdrop, Select, MenuItem } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 
@@ -29,6 +29,8 @@ function CommitsPage(prop) {
   const [dataForMemberCommitChart, setDataForMemberCommitChart] = useState({ labels:[], data: {} })
   const [currentProject, setCurrentProject] = useState({})
 
+  const [numberOfMember, setNumberOfMember] = useState(5)
+
   const [open, setOpen] = useState(false);
   const handleClose = () => {
     setOpen(false);
@@ -36,7 +38,6 @@ function CommitsPage(prop) {
   const handleToggle = () => {
     setOpen(!open);
   };
-
 
   const projectId = localStorage.getItem("projectId")
   useEffect(() => {
@@ -111,12 +112,12 @@ function CommitsPage(prop) {
     let temp = Object.keys(chartDataset.data).map(key => [key, chartDataset.data[key]])
     temp.sort((first, second) => second[1].reduce((a, b)=>a+b)-first[1].reduce((a, b)=>a+b))
     let result = {}
-    temp.slice(0, 10).forEach(x=> {
+    temp.slice(0, numberOfMember).forEach(x=> {
       result[x[0]] = x[1]
     })
     chartDataset.data = result
     setDataForMemberCommitChart(chartDataset)
-  }, [commitListData, prop.startMonth, prop.endMonth])
+  }, [commitListData, prop.startMonth, prop.endMonth, numberOfMember])
 
   if(!projectId) {
     return (
@@ -145,7 +146,19 @@ function CommitsPage(prop) {
             <div>
               <DrawingBoard data={dataForTeamCommitChart}/>
             </div>
-            <h1>Member</h1>
+            <div className={classes.root}>
+              <h1>Member</h1>
+              <Select
+                labelId="number-of-member-label"
+                id="number-of-member"
+                value={numberOfMember}
+                onChange={(e) => setNumberOfMember(e.target.value)}
+              >
+                <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={15}>15</MenuItem>
+              </Select>
+            </div>
             <div>
               <DrawingBoard data={dataForMemberCommitChart}/>
             </div>
