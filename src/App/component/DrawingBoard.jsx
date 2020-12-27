@@ -9,7 +9,9 @@ export default function DrawingBoard(props) {
     let _backgroundColor = ""
     
     const getColor = () => {
-      let colorChips =["#85c446", "#bce7c5", "#fdbd10", "#0066b2", "#ed7902", "#0085ad", "#009f4d", "#335238" ,"#c68143" ,"#ec1c24"]
+      // let colorChips =["#85c446", "#bce7c5", "#fdbd10", "#0066b2", "#ed7902", "#0085ad", "#009f4d", "#335238" ,"#c68143" ,"#ec1c24"]
+      let colorChips =["#84abd6", "#ff97ba", "#fdbd10", "#0066b2", "#ed7902", "#0085ad", "#009f4d", "#335238" ,"#c68143" ,"#ec1c24"]
+
       i++
       let boardColor = `${colorChips[i]}`
       _backgroundColor = boardColor
@@ -17,7 +19,7 @@ export default function DrawingBoard(props) {
     }
     
     const isFilled = () => {
-      return props.isIssue ? "origin" : false
+      return props.isIssue || props.isCodeBase ? "origin" : false
     }
 
 
@@ -54,12 +56,11 @@ export default function DrawingBoard(props) {
   
     var options = {
       legend: {
-        position: "right",
+        position: "top",
         display: true,
         labels: {
           boxWidth: 10
         },
-        // onClick: 
       },
       scales: {
         xAxes: [
@@ -72,7 +73,6 @@ export default function DrawingBoard(props) {
             ticks: {
               beginAtZero: true,
             },
-
           },
         ]
       }
