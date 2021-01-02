@@ -147,7 +147,7 @@ export default function AddProjectDialog({ open, reloadProjects, handleClose }) 
             <Button onClick={handleClose} color="secondary">
               Cancel
             </Button>
-            <Button onClick={createProject} color="primary">
+            <Button id="CreateProjectBtn" onClick={createProject} color="primary">
               Create
             </Button>
           </DialogActions>
