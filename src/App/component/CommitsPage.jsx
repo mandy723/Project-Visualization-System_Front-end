@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function CommitsPage(prop) {
+
 	const classes = useStyles()
   const [commitListData, setCommitListData] = useState([])
   const [dataForTeamCommitChart, setDataForTeamCommitChart] = useState({ labels:[], data: { team: []} })
@@ -40,13 +41,17 @@ function CommitsPage(prop) {
   };
 
   const projectId = localStorage.getItem("projectId")
+  const jwtToken = localStorage.getItem("jwtToken")
+
   useEffect(() => {
-    Axios.get(`http://localhost:9100/pvs-api/project/1/${projectId}`)
+    Axios.get(`http://localhost:9100/pvs-api/project/1/${projectId}`,
+     { headers: {"Authorization" : `${jwtToken}`} })
     .then((response) => {
       setCurrentProject(response.data)
     })
-    .catch((error) => {
-      console.error(error)
+    .catch((e) => {
+      alert(e.response.status)
+      console.error(e)
     })
   }, [])
 
@@ -56,19 +61,23 @@ function CommitsPage(prop) {
       handleToggle()
       const githubRepo = currentProject.repositoryDTOList.find(repo => repo.type == 'github')
       const query = githubRepo.url.split("github.com/")[1]
-      Axios.post(`http://localhost:9100/pvs-api/commits/${query}`)
+      Axios.post(`http://localhost:9100/pvs-api/github/commits/${query}`,"",
+      { headers: {"Authorization" : `${jwtToken}`} })
       .then((response) => {
         // todo need reafctor with async
-        Axios.get(`http://localhost:9100/pvs-api/commits/${query}`)
+        Axios.get(`http://localhost:9100/pvs-api/github/commits/${query}`,
+        { headers: {"Authorization" : `${jwtToken}`} })
           .then((response) => {
             setCommitListData(response.data)
             handleClose()
           })
           .catch((e) => {
+           alert(e.response.status)
             console.error(e)
           })
       })
       .catch((e) => {
+        alert(e.response.status)
         console.error(e)
       })
     }

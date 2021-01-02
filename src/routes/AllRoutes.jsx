@@ -4,6 +4,11 @@ import Container from '../App/component/Container'
 import routes from './Routes'
 
 function ProtectedRoute({ component: Component, ...rest }) {
+  const jwtToken = localStorage.getItem("jwtToken")
+  console.log(jwtToken);
+  if(jwtToken === null) {
+    return <Redirect to="/login" />
+  }
   return(
     <Route {...rest} render={(routeProps) => (
       <Container>

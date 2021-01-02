@@ -19,6 +19,7 @@ export default function AddProjectDialog({ open, reloadProjects, handleClose }) 
     const [sonarRepositoryURL, setSonarRepositoryURL] = useState("")
     const [isGithubAvailable, setIsGithubAvailable] = useState(false)
     const [isSonarAvailable, setIsSonarAvailable] = useState(false)
+    const jwtToken = localStorage.getItem("jwtToken")
 
     const createProject = () => {
       let checker = []
@@ -41,36 +42,40 @@ export default function AddProjectDialog({ open, reloadProjects, handleClose }) 
                 sonarRepositoryURL : sonarRepositoryURL
               }
               
-              Axios.post("http://localhost:9100/pvs-api/project", payload)
+              Axios.post("http://localhost:9100/pvs-api/project", payload,
+              { headers: {"Authorization" : `${jwtToken}`} })
                  .then((response) => {
-                   reloadProjects()
-                   handleClose()
+                    reloadProjects()
+                    handleClose()
                  })
                  .catch((e) => {
-                   console.error(e)
+                    alert(e.response.status)
+                    console.error(e)
                  }) 
             }
           }).catch((e) => {
+            alert(e.response.status)
             console.error(e)
           })
       }
     }
 
     const checkGithubRepositoryURL = () => {
-      return Axios.get(`http://localhost:9100/pvs-api/repository/github/check?url=${githubRepositoryURL}`)
+      return Axios.get(`http://localhost:9100/pvs-api/repository/github/check?url=${githubRepositoryURL}`,
+      { headers: {"Authorization" : `${jwtToken}`} })
       .then((response) => {
         setIsGithubAvailable(true);
         return true
       })
       .catch((e) => {
         alert("github error")
-        console.error(e)
         return false
       }) 
     }
 
     const checkSonarRepositoryURL = () => {
-      return Axios.get(`http://localhost:9100/pvs-api/repository/sonar/check?url=${sonarRepositoryURL}`)
+      return Axios.get(`http://localhost:9100/pvs-api/repository/sonar/check?url=${sonarRepositoryURL}`,
+      { headers: {"Authorization" : `${jwtToken}`} })
       .then((response) => {
         setIsSonarAvailable(true);
         return true

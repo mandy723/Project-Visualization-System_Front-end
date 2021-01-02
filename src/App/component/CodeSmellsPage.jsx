@@ -28,6 +28,8 @@ function CodeSmellsPage(prop) {
   const [dataForCodeSmellChart, setDataForCodeSmellChart] = useState({ labels:[], data: { codeSmell: []} })
  
   const projectId = localStorage.getItem("projectId")
+  const jwtToken = localStorage.getItem("jwtToken")
+
   const [open, setOpen] = useState(false)
   const handleClose = () => {
     setOpen(false)
@@ -37,12 +39,14 @@ function CodeSmellsPage(prop) {
   };
 
   useEffect(() => {
-    Axios.get(`http://localhost:9100/pvs-api/project/1/${projectId}`)
+    Axios.get(`http://localhost:9100/pvs-api/project/1/${projectId}`,
+    { headers: {"Authorization" : `${jwtToken}`} })
     .then(response => {
       setCurrentProject(response.data)
     })
-    .catch(error => {
-      console.error(error)
+    .catch(e => {
+      alert(e.response.status)
+      console.error(e)
     })
   }, [])
   
@@ -52,12 +56,14 @@ function CodeSmellsPage(prop) {
       let repositoryDTO = currentProject.repositoryDTOList.find(x => x.type == "sonar")
       let sonarComponent = repositoryDTO.url.split("id=")[1] 
       setCodeSmellUrl(`http://140.124.181.143:9000/project/issues?id=${sonarComponent}&resolved=false&types=CODE_SMELL`)
-      Axios.get(`http://localhost:9100/pvs-api/sonar/${sonarComponent}/code_smell`)
+      Axios.get(`http://localhost:9100/pvs-api/sonar/${sonarComponent}/code_smell`,
+      { headers: {"Authorization" : `${jwtToken}`} })
       .then((response) => {
         setCodeSmellList(response.data)
       })
-      .catch((error) => {
-        console.error(error)
+      .catch((e) => {
+        alert(e.response.status)
+        console.error(e)
       })
     }
   }, [currentProject])

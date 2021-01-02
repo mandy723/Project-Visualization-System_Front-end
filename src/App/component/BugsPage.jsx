@@ -36,15 +36,19 @@ function BugsPage(prop) {
     setOpen(!open)
   };
 
+  const jwtToken = localStorage.getItem("jwtToken")
+
   //TODO 這邊寫死的記得要改唷!!!! >////<
 
   useEffect(() => {
-    Axios.get(`http://localhost:9100/pvs-api/project/1/${projectId}`)
+    Axios.get(`http://localhost:9100/pvs-api/project/1/${projectId}`,
+    { headers: {"Authorization" : `${jwtToken}`} })
     .then(response => {
       setCurrentProject(response.data)
     })
-    .catch(error => {
-      console.error(error)
+    .catch(e => {
+      alert(e.response.status)
+      console.error(e)
     })
   }, [])
   
@@ -54,12 +58,14 @@ function BugsPage(prop) {
       let repositoryDTO = currentProject.repositoryDTOList.find(x => x.type == "sonar")
       let sonarComponent = repositoryDTO.url.split("id=")[1]
       setBugUrl(`http://140.124.181.143:9000/project/issues?id=${sonarComponent}&resolved=false&types=BUG`)
-      Axios.get(`http://localhost:9100/pvs-api/sonar/${sonarComponent}/bug`)
+      Axios.get(`http://localhost:9100/pvs-api/sonar/${sonarComponent}/bug`,
+      { headers: {"Authorization" : `${jwtToken}`} })
       .then((response) => {
         setBugList(response.data)
       })
-      .catch((error) => {
-        console.error(error)
+      .catch((e) => {
+        alert(e.response.status)
+        console.error(e)
       })
     }
   }, [currentProject])
@@ -83,7 +89,7 @@ function BugsPage(prop) {
         <CircularProgress color="inherit" />
       </Backdrop>
       <h1>{currentProject ? currentProject.projectName : ""}</h1>
-      <h2><a href={bugUrl} target="blank">Bugs</a></h2>
+      <h2><a href={bugUrl} target="blank">{dataForBugChart.data.bug[dataForBugChart.data.bug.length-1]}</a></h2>
       <div className={classes.root}>
         <div style={{width: "67%"}}>
           <div>

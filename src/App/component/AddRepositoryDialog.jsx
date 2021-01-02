@@ -12,6 +12,8 @@ import {
 
 export default function AddRepositoryDialog({ open, reloadProjects, handleClose, projectId, repoType}) {
     const [repositoryURL, setRepositoryURL] = useState("")
+    const jwtToken = localStorage.getItem("jwtToken")
+
     const addRepository = () => {
       if(repositoryURL === "") {
         alert("不準啦馬的>///<")
@@ -20,13 +22,15 @@ export default function AddRepositoryDialog({ open, reloadProjects, handleClose,
           projectId: projectId,
           repositoryURL : repositoryURL
         }
-        Axios.post(`http://localhost:9100/pvs-api/project/${projectId}/repository/${repoType}`, payload)
+        Axios.post(`http://localhost:9100/pvs-api/project/${projectId}/repository/${repoType}`, payload,
+        { headers: {"Authorization" : `${jwtToken}`} })
            .then((response) => {
-             reloadProjects()
-             handleClose()
+              reloadProjects()
+              handleClose()
            })
            .catch((e) => {
-             console.error(e)
+              alert(e.response.status)
+              console.error(e)
            }) 
       }
     }

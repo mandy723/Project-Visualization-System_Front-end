@@ -30,6 +30,7 @@ function IssuesPage(prop) {
   const [currentProject, setCurrentProject] = useState({ })
 
   const projectId = localStorage.getItem("projectId")
+  const jwtToken = localStorage.getItem("jwtToken")
 
   const [open, setOpen] = useState(false);
   const handleClose = () => {
@@ -40,12 +41,14 @@ function IssuesPage(prop) {
   };
 
   useEffect(() => {
-    Axios.get(`http://localhost:9100/pvs-api/project/1/${projectId}`)
+    Axios.get(`http://localhost:9100/pvs-api/project/1/${projectId}`,
+    { headers: {"Authorization" : `${jwtToken}`} })
     .then((response) => {
       setCurrentProject(response.data)
     })
-    .catch((error) => {
-      console.error(error)
+    .catch((e) => {
+      alert(e.response.status)
+      console.error(e)
     })
   }, [])
 
@@ -56,13 +59,15 @@ function IssuesPage(prop) {
       const query = githubRepo.url.split("github.com/")[1]
   
         // todo need reafctor with async
-      Axios.get(`http://localhost:9100/pvs-api/issues/${query}`)
+      Axios.get(`http://localhost:9100/pvs-api/github/issues/${query}`,
+      { headers: {"Authorization" : `${jwtToken}`} })
         .then((response) => {
           console.log(response.data)
           setIssueListData(response.data)
           handleClose()
         })
         .catch((e) => {
+          alert(e.response.status);
           console.error(e)
         })
     }

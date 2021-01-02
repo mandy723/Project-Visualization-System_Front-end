@@ -275,6 +275,7 @@ function Sidebar(prop) {
   )
   
   const logout = () => {
+    localStorage.clear()
 		history.push('/login')
   }
   
@@ -314,10 +315,12 @@ function Sidebar(prop) {
     history.push("/duplications")
   }
 
+  const jwtToken = localStorage.getItem("jwtToken")
 
   useEffect(() => {
     if(prop.currentProjectId != 0) {
-      Axios.get(`http://localhost:9100/pvs-api/project/1/${prop.currentProjectId}`)
+      Axios.get(`http://localhost:9100/pvs-api/project/1/${prop.currentProjectId}`,
+      { headers: {"Authorization" : `${jwtToken}`} })
       .then((response) => {
         setCurrentProject(response.data)
       })

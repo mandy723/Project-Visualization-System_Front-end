@@ -27,6 +27,8 @@ function CodeCoveragePage(prop) {
   const [dataForCoverageChart, setDataForCoverageChart] = useState({ labels:[], data: { coverage: []} })
   const [coverageUrl, setCoverageUrl] = useState("")
   const projectId = localStorage.getItem("projectId")
+  const jwtToken = localStorage.getItem("jwtToken")
+
   const [open, setOpen] = useState(false)
   const handleClose = () => {
     setOpen(false)
@@ -36,12 +38,14 @@ function CodeCoveragePage(prop) {
   };
 
   useEffect(() => {
-    Axios.get(`http://localhost:9100/pvs-api/project/1/${projectId}`)
+    Axios.get(`http://localhost:9100/pvs-api/project/1/${projectId}`,
+    { headers: {"Authorization" : `${jwtToken}`} })
     .then(response => {
       setCurrentProject(response.data)
     })
-    .catch(error => {
-      console.error(error)
+    .catch(e => {
+      alert(e.response.status)
+      console.error(e)
     })
   }, [])
   
@@ -51,12 +55,14 @@ function CodeCoveragePage(prop) {
       let repositoryDTO = currentProject.repositoryDTOList.find(x => x.type == "sonar")
       let sonarComponent = repositoryDTO.url.split("id=")[1]    
       setCoverageUrl(`http://140.124.181.143:9000/component_measures?id=${sonarComponent}&metric=Coverage&view=list`)
-      Axios.get(`http://localhost:9100/pvs-api/sonar/${sonarComponent}/coverage`)
+      Axios.get(`http://localhost:9100/pvs-api/sonar/${sonarComponent}/coverage`,
+      { headers: {"Authorization" : `${jwtToken}`} })
       .then((response) => {
         setCoverageList(response.data)
       })
-      .catch((error) => {
-        console.error(error)
+      .catch((e) => {
+        alert(e.response.status)
+        console.error(e)
       })
     }
   }, [currentProject])
@@ -78,7 +84,7 @@ function CodeCoveragePage(prop) {
         <CircularProgress color="inherit" />
       </Backdrop>
       <h1>{currentProject ? currentProject.projectName : ""}</h1>
-      <h2><a href={coverageUrl} target="blank">Coverage</a></h2>
+      <h2><a href={coverageUrl} target="blank">{dataForCoverageChart.data.coverage[dataForCoverageChart.data.coverage.length-1]}%</a></h2>
       <div className={classes.root}>
         <div style={{width: "67%"}}>
           <div>
