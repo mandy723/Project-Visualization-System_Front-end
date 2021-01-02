@@ -34,7 +34,7 @@ export default function AddProjectDialog({ open, reloadProjects, handleClose }) 
 
         Promise.all(checker)
           .then((response)=> {
-            if(response.find(false) == undefined) {
+            if(response.includes(false) == false) {
               let payload = {
                 projectName : projectName,
                 githubRepositoryURL : githubRepositoryURL,
