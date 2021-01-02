@@ -81,7 +81,7 @@ function CodeSmellsPage(prop) {
         <CircularProgress color="inherit" />
       </Backdrop>
       <h1>{currentProject ? currentProject.projectName : ""}</h1>
-      <h2><a href={codeSmellUrl} target="blank">Code Smells</a></h2>
+      <h2><a href={codeSmellUrl} target="blank">{dataForCodeSmellChart.data.codeSmell[dataForCodeSmellChart.data.codeSmell.length-1]}</a></h2>
       <div className={classes.root}>
         <div style={{width: "67%"}}>
           <div>
