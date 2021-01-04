@@ -55,7 +55,6 @@ function CommitsPage(prop) {
     })
   }, [])
 
-
   useEffect(() => {
     if(Object.keys(currentProject).length != 0) {
       handleToggle()
@@ -153,7 +152,7 @@ function CommitsPage(prop) {
           <div>
             <h1>Team</h1>
             <div>
-              <DrawingBoard data={dataForTeamCommitChart}/>
+              <DrawingBoard data={dataForTeamCommitChart} id="team-commit-chart"/>
             </div>
             <div className={classes.root}>
               <h1>Member</h1>
@@ -169,7 +168,7 @@ function CommitsPage(prop) {
               </Select>
             </div>
             <div>
-              <DrawingBoard data={dataForMemberCommitChart}/>
+              <DrawingBoard data={dataForMemberCommitChart} id="member-commit-chart"/>
             </div>
           </div>
         </div>

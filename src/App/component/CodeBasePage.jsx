@@ -121,7 +121,7 @@ function CodeBasePage(prop) {
           <div>
             <h1>Team</h1>
             <div>
-              <DrawingBoard data={dataForCodeBaseChart} isCodeBase={true}/>
+              <DrawingBoard data={dataForCodeBaseChart} isCodeBase={true} id="team-codebase-chart"/>
             </div>
           </div>
         </div>
