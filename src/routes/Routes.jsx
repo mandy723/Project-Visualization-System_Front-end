@@ -10,7 +10,7 @@ import CodeSmellsPage from '../App/component/CodeSmellsPage'
 import DuplicationsPage from '../App/component/DuplicationsPage'
 
 const routes = [
-  {path: "/", redirect: true, to:"/login"},
+  {path: "/", redirect: true, to:"/select"},
   {path: "/login", component: Login, loginRequired: false},
   {path: "/select", component: SelectProject, loginRequired: true},
   {path: "/dashboard", component: DashboardPage, loginRequired: true},

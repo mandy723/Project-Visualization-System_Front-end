@@ -5,7 +5,6 @@ import routes from './Routes'
 
 function ProtectedRoute({ component: Component, ...rest }) {
   const jwtToken = localStorage.getItem("jwtToken")
-  console.log(jwtToken);
   if(jwtToken === null) {
     return <Redirect to="/login" />
   }
