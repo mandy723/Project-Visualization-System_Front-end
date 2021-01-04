@@ -70,6 +70,7 @@ function BugsPage(prop) {
     }
   }, [currentProject])
 
+  
   useEffect(() => {
     let chartDataset = { labels:[], data: { bug: []} }
 
