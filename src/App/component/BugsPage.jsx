@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import ProjectAvatar from './ProjectAvatar'
 import Axios from 'axios'
 import { CircularProgress, Backdrop } from '@material-ui/core'
 import { connect } from 'react-redux'
@@ -89,14 +90,22 @@ function BugsPage(prop) {
       <Backdrop className={classes.backdrop} open={open}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      <h1>{currentProject ? currentProject.projectName : ""}</h1>
-      <h2><a href={bugUrl} target="blank">{dataForBugChart.data.bug[dataForBugChart.data.bug.length-1]}</a></h2>
+      <div className={classes.root}>
+        {currentProject&&<ProjectAvatar 
+          size = "small" 
+          project={currentProject}
+        />}
+        <p>
+          <h2>{currentProject ? currentProject.projectName : ""}</h2>
+        </p>
+      </div>
+      <h2 id="number-of-sonar"><a href={bugUrl} target="blank">{dataForBugChart.data.bug[dataForBugChart.data.bug.length-1]}</a></h2>
       <div className={classes.root}>
         <div style={{width: "67%"}}>
           <div>
             <h1>Bugs</h1>
             <div>
-              <DrawingBoard data={dataForBugChart} maxBoardY={Math.max(...dataForBugChart.data.bug)+5}/>
+              <DrawingBoard data={dataForBugChart} maxBoardY={Math.max(...dataForBugChart.data.bug)+5} id="bugs-chart"/>
             </div>
           </div>
         </div>

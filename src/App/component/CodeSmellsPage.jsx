@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import ProjectAvatar from './ProjectAvatar'
 import Axios from 'axios'
 import { CircularProgress, Backdrop } from '@material-ui/core'
 import { connect } from 'react-redux'
@@ -86,14 +87,22 @@ function CodeSmellsPage(prop) {
       <Backdrop className={classes.backdrop} open={open}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      <h1>{currentProject ? currentProject.projectName : ""}</h1>
+      <div className={classes.root}>
+        {currentProject&&<ProjectAvatar 
+          size = "small" 
+          project={currentProject}
+        />}
+        <p>
+          <h2 id="number-of-sonar">{currentProject ? currentProject.projectName : ""}</h2>
+        </p>
+      </div>
       <h2><a href={codeSmellUrl} target="blank">{dataForCodeSmellChart.data.codeSmell[dataForCodeSmellChart.data.codeSmell.length-1]}</a></h2>
       <div className={classes.root}>
         <div style={{width: "67%"}}>
           <div>
             <h1>Code Smells</h1>
             <div>
-              <DrawingBoard data={dataForCodeSmellChart} maxBoardY={Math.max(...dataForCodeSmellChart.data.codeSmell)+5}/>
+              <DrawingBoard data={dataForCodeSmellChart} maxBoardY={Math.max(...dataForCodeSmellChart.data.codeSmell)+5} id="code-smells-chart"/>
             </div>
           </div>
         </div>
