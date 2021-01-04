@@ -1,19 +1,30 @@
 import React, { useState } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 import Axios from 'axios'
 import logo from './../../welcome.png'
 import { useHistory } from 'react-router-dom'
 import './Login.css'
 import {
-  TextField
+  TextField,
+  Button
 } from '@material-ui/core'
 
 export default function Login() {
-  const styles = theme => ({
-    input: {
-        color: 'white'
-    }
-});
+  
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      '& .MuiTextField-root': {
+        margin: theme.spacing(1),
+      },
+    },
+    backdrop: {
+      zIndex: theme.zIndex.drawer + 1,
+      color: '#fff',
+    },
+  }));
 
+
+	const classes = useStyles()
   const history = useHistory()
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
@@ -44,7 +55,7 @@ export default function Login() {
   }
 
   return (
-    <div>
+    <div class = {classes.root}>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <TextField
@@ -59,13 +70,16 @@ export default function Login() {
           <TextField
               id="password"
               label="Password"
-              type="text"
+              type="password"
               variant="outlined"
               background
               onChange = {(e) => {setPassword(e.target.value)}}
             />
         <br/>
-        <button onClick={login} >Login</button>
+        {/* <button onClick={login} >Login</button> */}
+        <Button variant="contained" onClick={login} color="primary">
+            Login
+        </Button>
       </header>
     </div>
   )
