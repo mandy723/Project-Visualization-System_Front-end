@@ -36,7 +36,7 @@ import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers'
 import MomentUtils from '@date-io/moment'
 import { makeStyles } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
-import { setStartMonth, setEndMonth } from './../../redux/action'
+import { setStartMonth, setEndMonth, setStartDate, setEndDate } from './../../redux/action'
 import Axios from 'axios'
 
 const drawerWidth = 240
@@ -343,29 +343,29 @@ function Sidebar(prop) {
           <img src={logo_p}/>
           <img src={logo_v}/>
           <img src={logo_s}/>
-            <div className={classes.monthSelector}>
+            <div className={classes.dateSelector}>
               <MuiPickersUtilsProvider utils={MomentUtils}>
               <DatePicker className={classes.datepicker}
                     fullWidth
                     focused={false}
                     openTo="year"
-                    views={["year", "month"]}
+                    views={["year", "month", "date"]}
                     label="Start Month and Year"
-                    value={prop.startMonth}
-                    onChange={prop.setStartMonth}
+                    value={prop.startDate}
+                    onChange={prop.setStartDate}
                 />
               </MuiPickersUtilsProvider>
             </div>
-            <div className={classes.monthSelector}>
+            <div className={classes.dateSelector}>
               <MuiPickersUtilsProvider utils={MomentUtils}> 
                 <DatePicker
                     fullWidth
                     focused={false}
                     openTo="year"
-                    views={["year", "month"]}
+                    views={["year", "month", "date"]}
                     label="End Month and Year"
-                    value={prop.endMonth}
-                    onChange={prop.setEndMonth}
+                    value={prop.endDate}
+                    onChange={prop.setEndDate}
                 />
               </MuiPickersUtilsProvider>
             </div>
@@ -401,16 +401,16 @@ function Sidebar(prop) {
 
 const mapStateToProps = (state) => {
   return {
-    startMonth: state.selectedMonth.startMonth,
-    endMonth: state.selectedMonth.endMonth,
+    startDate: state.selectedDate.startDate,
+    endDate: state.selectedDate.endDate,
     currentProjectId: state.currentProjectId
   }
 }
 
 const mapActionToProps = (dispatch) => {
   return {
-    setStartMonth: (startMonth) => dispatch(setStartMonth(startMonth)),
-    setEndMonth: (endMonth) => dispatch(setEndMonth(endMonth))
+    setStartDate: (startDate) => dispatch(setStartDate(startDate)),
+    setEndDate: (endDate) => dispatch(setEndDate(endDate))
   }
 }
 

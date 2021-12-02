@@ -79,27 +79,27 @@ function CodeBasePage(prop) {
   }, [currentProject, prop.startMonth, prop.endMonth])
   
   useEffect(() => {
-    const { startMonth, endMonth } = prop
+    const { startMonth, endMonth, startDate, endDate } = prop
 
     let chartDataset = { labels:[], data: { additions: [], deletions: []} }
-    for (let month = moment(startMonth); month <= moment(endMonth); month=month.add(1, 'months')) {
-      chartDataset.labels.push(month.format("YYYY-MM"))
+    for (let date = moment(startDate); date <= moment(endDate); date=date.add(1, 'days')) {
+      chartDataset.labels.push(date.format("YYYY-MM-DD"))
 
       chartDataset.data.additions.push(commitListData.filter(commit=>{
-        return moment(commit.committedDate).format("YYYY-MM") == month.format("YYYY-MM")
+        return moment(commit.committedDate).format("YYYY-MM-DD") == date.format("YYYY-MM-DD")
       })
       .reduce(function(additionSum, currentCommit) {
           return additionSum + currentCommit.additions;
       }, 0))
       chartDataset.data.deletions.push(commitListData.filter(commit=>{
-        return moment(commit.committedDate).format("YYYY-MM") == month.format("YYYY-MM")
+        return moment(commit.committedDate).format("YYYY-MM-DD") == date.format("YYYY-MM-DD")
       })
       .reduce(function(deletionSum, currentCommit) {
         return deletionSum - currentCommit.deletions;
       }, 0))
     }
     setDataForCodeBaseChart(chartDataset)
-  }, [commitListData, prop.startMonth, prop.endMonth])
+  }, [commitListData, prop.startDate, prop.endDate])
 
   return(
     <div style={{marginLeft:"10px"}}>
@@ -133,7 +133,9 @@ function CodeBasePage(prop) {
 const mapStateToProps = (state) => {
   return {
     startMonth: state.selectedMonth.startMonth,
-    endMonth: state.selectedMonth.endMonth
+    endMonth: state.selectedMonth.endMonth,
+    startDate: state.selectedDate.startDate,
+    endDate: state.selectedDate.endDate
   }
 }
 
