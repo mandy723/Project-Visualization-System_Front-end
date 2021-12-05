@@ -71,34 +71,41 @@ function IssuesPage(prop) {
           console.error(e)
         })
     }
-  }, [currentProject, prop.startMonth, prop.endMonth])
+  }, [currentProject, prop.startDate, prop.endDate])
 
   useEffect(() => {
-    const { endMonth } = prop
+    let { startDate, endDate } = prop
+	startDate = moment(startDate);
+	endDate = moment(endDate);
     let chartDataset = { labels:[], data: { created: [], closed: []} }
     let issueListDataSortedByCreatedAt = issueListData
-    let issueListDataSortedByClosedAt = issueListData
+    let issueListDataSortedByClosedAt = issueListData.filter(v => v.closedAt != null)
 
     issueListDataSortedByCreatedAt.sort((a, b) => a.createdAt - b.createdAt)
     issueListDataSortedByClosedAt.sort((a, b) => a.closedAt - b.closedAt)
-
     if (issueListDataSortedByCreatedAt.length > 0) {
-      for (let month = moment(issueListDataSortedByCreatedAt[0].createdAt); month <= moment(endMonth).add(1, 'months'); month=month.add(1, 'months')) {
+		let is_same_month = ( Math. abs(startDate.diff(endDate, 'days')) <= 60);
+		let unit = "days";
+		let symbol = "YYYY-MM-DD";
+		if (!is_same_month) {
+			unit = "month";
+			symbol = "YYYY-MM";
+		}
+      for (let date = moment(startDate); date.isSameOrBefore(endDate, unit); date=date.add(1, unit)) {
         let index
-        chartDataset.labels.push(month.format("YYYY-MM"))
+		chartDataset.labels.push(date.format(symbol))
         
         index = issueListDataSortedByCreatedAt.findIndex(issue => {
-          return moment(issue.createdAt).year() > month.year() || moment(issue.createdAt).year() == month.year() && moment(issue.createdAt).month() > month.month()
+			return date.isBefore(issue.createdAt, unit);
         })
-        chartDataset.data.created.push(index == -1 ? issueListData.length : index)
+        chartDataset.data.created.push(index == -1 ? issueListDataSortedByCreatedAt.length : index)
         
         index = issueListDataSortedByClosedAt.findIndex(issue => {
-          return moment(issue.closedAt).year() > month.year() || moment(issue.closedAt).year() == month.year() && moment(issue.closedAt).month() > month.month()
+			return date.isBefore(issue.closedAt, unit);
         })
-        chartDataset.data.closed.push(index == -1 ? issueListData.length : index)
+        chartDataset.data.closed.push(index == -1 ? issueListDataSortedByClosedAt.length : index)
       }
     }
-    console.log(chartDataset)
     setDataForIssueChart(chartDataset)
   }, [issueListData])
 
@@ -133,7 +140,8 @@ function IssuesPage(prop) {
 
 const mapStateToProps = (state) => {
   return {
-    endMonth: state.selectedMonth.endMonth
+	startDate: state.selectedDate.startDate,
+    endDate: state.selectedDate.endDate
   }
 }
 

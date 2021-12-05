@@ -80,52 +80,82 @@ function CommitsPage(prop) {
         console.error(e)
       })
     }
-  }, [currentProject, prop.startMonth, prop.endMonth])
+  }, [currentProject, prop.startDate, prop.endDate])
 
   useEffect(() => {
-    const { startMonth, endMonth } = prop
+    let { startDate, endDate } = prop
+	startDate = moment(startDate);
+	endDate = moment(endDate);
+
+	const list = commitListData.filter(commitListData => {
+		return moment(commitListData.committedDate).isBetween(startDate, endDate, 'days');
+	});
 
     let chartDataset = { labels:[], data: { team: []} }
-    for (let month = moment(startMonth); month <= moment(endMonth); month=month.add(1, 'months')) {
-      chartDataset.labels.push(month.format("YYYY-MM"))
-      chartDataset.data.team.push(commitListData.filter(commit=>{
-        return moment(commit.committedDate).format("YYYY-MM") == month.format("YYYY-MM")
+	let is_same_month = ( Math. abs(startDate.diff(endDate, 'days')) <= 60);
+	let unit = "days";
+	let symbol = "YYYY-MM-DD";
+	if (!is_same_month) {
+		unit = "month";
+		symbol = "YYYY-MM";
+	}
+    for (let date = moment(startDate);  date.isSameOrBefore(endDate, unit); date=date.add(1, unit)) {
+		chartDataset.labels.push(date.format(symbol))
+      chartDataset.data.team.push(list.filter(commit=>{
+        return moment(commit.committedDate).format(symbol) == date.format(symbol)
       }).length)
     }
     
     setDataForTeamCommitChart(chartDataset)
-  }, [commitListData, prop.startMonth, prop.endMonth])
+  }, [commitListData, prop.startDate, prop.endDate])
 
   useEffect(() => {
-    const { startMonth, endMonth } = prop
-
+    let { startDate, endDate, startMonth, endMonth } = prop
+	startDate = moment(startDate);
+	endDate = moment(endDate);
     let chartDataset = {
       labels:[],
       data: {}
     }
+	const list = commitListData.filter(commitListData => {
+		return moment(commitListData.committedDate).isBetween(startDate, endDate, 'days');
+	});
+
     new Set(commitListData.map(commit=>commit.authorName)).forEach(author => {
       chartDataset.data[author] = []
     })
-    for (let month = moment(startMonth); month <= moment(endMonth); month=month.add(1, 'months')) {
-      chartDataset.labels.push(month.format("YYYY-MM"))
-      for (var key in chartDataset.data) {
-        chartDataset.data[key].push(0)
-      }
-      commitListData.forEach(commitData => {
-        if (moment(commitData.committedDate).format("YYYY-MM") == month.format("YYYY-MM")) {
-          chartDataset.data[commitData.authorName][chartDataset.labels.length-1] += 1
-        }
-      })
-    }
+
+	let is_same_month = ( Math. abs(startDate.diff(endDate, 'days')) <= 60);
+	let unit = "days";
+	let symbol = "YYYY-MM-DD";
+	if (!is_same_month) {
+		unit = "month";
+		symbol = "YYYY-MM";
+	}
+
+	  for (let date = moment(startDate);  date.isSameOrBefore(endDate, unit); date=date.add(1, unit)) {
+
+		chartDataset.labels.push(date.format(symbol))
+		for (var key in chartDataset.data) {
+			chartDataset.data[key].push(0)
+		}
+		commitListData.forEach(commitData => {
+		  if (moment(commitData.committedDate).format(symbol) == date.format(symbol)) {
+			chartDataset.data[commitData.authorName][chartDataset.labels.length-1] += 1
+		  }
+		})
+	  }
+
     let temp = Object.keys(chartDataset.data).map(key => [key, chartDataset.data[key]])
     temp.sort((first, second) => second[1].reduce((a, b)=>a+b)-first[1].reduce((a, b)=>a+b))
     let result = {}
     temp.slice(0, numberOfMember).forEach(x=> {
       result[x[0]] = x[1]
     })
+	console.log(result);
     chartDataset.data = result
     setDataForMemberCommitChart(chartDataset)
-  }, [commitListData, prop.startMonth, prop.endMonth, numberOfMember])
+  }, [commitListData, prop.startDate, prop.endDate, numberOfMember])
 
   if(!projectId) {
     return (
@@ -180,8 +210,10 @@ function CommitsPage(prop) {
 
 const mapStateToProps = (state) => {
   return {
-    startMonth: state.selectedMonth.startMonth,
-    endMonth: state.selectedMonth.endMonth,
+	startMonth: state.selectedMonth.startMonth,
+	endMonth: state.selectedMonth.endMonth,
+	startDate: state.selectedDate.startDate,
+    endDate: state.selectedDate.endDate
   }
 }
 

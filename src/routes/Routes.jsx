@@ -1,4 +1,5 @@
 import Login from '../App/component/Login'
+import Register from '../App/component/Register'
 import SelectProject from '../App/component/SelectProject'
 import DashboardPage from '../App/component/DashboardPage'
 import CommitsPage from '../App/component/CommitsPage'
@@ -8,10 +9,12 @@ import CodeCoveragePage from '../App/component/CodeCoveragePage'
 import BugsPage from '../App/component/BugsPage'
 import CodeSmellsPage from '../App/component/CodeSmellsPage'
 import DuplicationsPage from '../App/component/DuplicationsPage'
+import PullRequestsPage from '../App/component/PullRequestsPage'
 
 const routes = [
   {path: "/", redirect: true, to:"/select"},
   {path: "/login", component: Login, loginRequired: false},
+  {path: "/register", component: Register, loginRequired: false},
   {path: "/select", component: SelectProject, loginRequired: true},
   {path: "/dashboard", component: DashboardPage, loginRequired: true},
   {path: "/commits", component: CommitsPage, loginRequired: true},
@@ -21,6 +24,7 @@ const routes = [
   {path: "/bugs", component: BugsPage, loginRequired: true},
   {path: "/code_smells", component: CodeSmellsPage, loginRequired: true},
   {path: "/duplications", component: DuplicationsPage, loginRequired: true},
+  {path: "/pull-requests", component: PullRequestsPage, loginRequired: true},
 ]
 
 export default routes

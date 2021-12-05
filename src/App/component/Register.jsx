@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import Axios from 'axios'
-import logo from './../../welcome.png'
+import Axios from 'axios'	
 import { useHistory } from 'react-router-dom'
 import './Login.css'
 import {
@@ -30,43 +29,42 @@ export default function Login() {
   const [password, setPassword] = useState("")
 
 
-  const login = () => {
+  const register = () => {
     if(username === "" || password === "") {
-      alert("不準啦馬的>///<")
+      alert("輸入的資料不正確")
     } else {
       let payload = {
         username: username,
         password : password
       }
-      Axios.post(`http://localhost:9100/pvs-api/auth/login`, payload)
+      Axios.post(`http://localhost:9100/pvs-api/member`, payload)
          .then((response) => {
-            localStorage.setItem("jwtToken", response.data)
-            goToSelect()
+			alert("註冊成功!")
+            goToLogin()
          })
          .catch((e) => {
-           alert(e.response.status)
+           alert(e.response.data)
            console.error(e)
+		   
          }) 
     }
   }
-  const register = () => {
-	history.push("/register")
-  }
 
-  const goToSelect = () => {
-    history.push("/select")
+  const goToLogin = () => {
+    history.push("/login")
   }
-
   return (
+	  
     <div class = {classes.root}>
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <TextField
               id="username"
               label="Username"
               type="text"
               variant="outlined"
+			  autocomplete="off"
               background
+			  required="true"
               onChange = {(e) => {setUsername(e.target.value)}}
             />
 
@@ -74,19 +72,21 @@ export default function Login() {
               id="password"
               label="Password"
               type="password"
+			  autocomplete="off"
               variant="outlined"
               background
+			  required="true"
               onChange = {(e) => {setPassword(e.target.value)}}
             />
         <br/>
         {/* <button onClick={login} >Login</button> */}
-		<div class = {classes.root}>
-        <Button variant="contained" onClick={login} color="primary">
-            Login
+		<div>
+        <Button variant="contained" onClick={register} color="primary">
+            Confirm
         </Button>
 		&nbsp;&nbsp;&nbsp;
-		<Button variant="contained" onClick={register} color="secondary">
-            Sign Up
+		<Button variant="contained" onClick={goToLogin} color="secondary">
+            Cancel
         </Button>
 		</div>
       </header>
