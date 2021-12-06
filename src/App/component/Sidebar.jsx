@@ -28,6 +28,7 @@ import {
 import { AiFillBug } from 'react-icons/ai'
 import { IoGitCommitSharp, IoNuclear } from 'react-icons/io5'
 import { GoIssueOpened } from 'react-icons/go'
+import { GoGitPullRequest } from 'react-icons/go'
 import { HiDocumentDuplicate } from 'react-icons/hi'
 import { SiGithub, SiSonarqube } from 'react-icons/si'
 import { RiDashboardFill } from 'react-icons/ri'
@@ -216,6 +217,13 @@ function Sidebar(prop) {
                       </ListItemIcon>
                       <ListItemText primary="Code Base" />
                     </ListItem>
+
+					<ListItem button className={classes.nested} onClick={goToPullRequest}>
+                      <ListItemIcon>
+                        <GoGitPullRequest />
+                      </ListItemIcon>
+                      <ListItemText primary="Pull Request" />
+                    </ListItem>
                 </List>
               </Collapse>
             </div>
@@ -299,6 +307,10 @@ function Sidebar(prop) {
     history.push("/codebase")
   }
 
+  const goToPullRequest = () => {
+    history.push("/pull-requests")
+  }
+
   const goToCodeCoverage = () => {
     history.push("/code_coverage")
   }
@@ -348,7 +360,7 @@ function Sidebar(prop) {
               <DatePicker className={classes.datepicker}
                     fullWidth
                     focused={false}
-                    openTo="year"
+                    // openTo="year"
                     views={["year", "month", "date"]}
                     label="Start Month and Year"
                     value={prop.startDate}
@@ -361,7 +373,7 @@ function Sidebar(prop) {
                 <DatePicker
                     fullWidth
                     focused={false}
-                    openTo="year"
+                    // openTo="year"
                     views={["year", "month", "date"]}
                     label="End Month and Year"
                     value={prop.endDate}

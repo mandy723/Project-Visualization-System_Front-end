@@ -8,7 +8,7 @@ export function setStartDate(startDate) {
 
 export function setEndDate(endDate) {
     return {
-        type: "SET_START_DATE",
+        type: "SET_END_DATE",
         endDate: endDate
     }
 }
