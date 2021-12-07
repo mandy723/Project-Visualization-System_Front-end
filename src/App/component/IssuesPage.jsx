@@ -129,7 +129,7 @@ function IssuesPage(prop) {
           <div>
             <h1>Team</h1>
             <div>
-              <DrawingBoard data={dataForIssueChart} color='skyblue' id="team-issue-chart" isIssue={true} />
+              <DrawingBoard data={dataForIssueChart} color='skyblue' id="team-issue-chart" />
             </div>
           </div>
         </div>
