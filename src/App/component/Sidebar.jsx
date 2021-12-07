@@ -359,10 +359,11 @@ function Sidebar(prop) {
               <MuiPickersUtilsProvider utils={MomentUtils}>
               <DatePicker className={classes.datepicker}
                     fullWidth
+					format="YYYY-MM-DD"
                     focused={false}
                     // openTo="year"
                     views={["year", "month", "date"]}
-                    label="Start Month and Year"
+                    label="Start Date"
                     value={prop.startDate}
                     onChange={prop.setStartDate}
                 />
@@ -373,9 +374,10 @@ function Sidebar(prop) {
                 <DatePicker
                     fullWidth
                     focused={false}
+					format="YYYY-MM-DD"
                     // openTo="year"
                     views={["year", "month", "date"]}
-                    label="End Month and Year"
+                    label="End Date"
                     value={prop.endDate}
                     onChange={prop.setEndDate}
                 />
