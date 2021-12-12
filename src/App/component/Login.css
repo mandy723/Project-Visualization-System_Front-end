@@ -2,8 +2,13 @@
   text-align: center;
 }
 
-.App-logo {
+.App-logo1 {
   height: 40vmin;
+  pointer-events: none;
+}
+
+.App-logo2 {
+  height: 10vmin;
   pointer-events: none;
 }
 
@@ -14,7 +19,7 @@
 } */
 
 .App-header {
-  background-color:white;
+  background-color: white;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -30,9 +35,9 @@
 
 @keyframes App-logo-spin {
   from {
-    transform: rotate(0deg)
+    transform: rotate(0deg);
   }
   to {
-    transform: rotate(360deg)
+    transform: rotate(360deg);
   }
 }
