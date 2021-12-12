@@ -28,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function PullRequestPage(prop) {
+  const [showOpenState, setShowOpenState] = useState(true);
+  const [showClosedState, setShowClosedState] = useState(true);
+  const [showMergedState, setShowMergedState] = useState(true);
   const classes = useStyles();
   const [pullRequestListData, setPullRequestListData] = useState([]);
   const [dataForCodeBaseChart, setDataForCodeBaseChart] = useState({
@@ -86,7 +89,6 @@ function PullRequestPage(prop) {
     let { startDate, endDate } = prop;
     startDate = moment(startDate);
 
-    console.log(pullRequestListData);
     const data = pullRequestListData.filter((pullRequestListData) => {
       return moment(pullRequestListData.createdAt).isBetween(
         startDate,
@@ -95,11 +97,19 @@ function PullRequestPage(prop) {
         "[]"
       );
     });
-    console.log(startDate, endDate, data);
     let chartDataset = {
       labels: [],
-      data: { open: [], closed: [], merged: [] },
+      data: {}
     };
+	if (showOpenState) {
+		chartDataset.data.open = [];
+	}
+	if (showClosedState) {
+		chartDataset.data.closed = [];
+	}
+	if (showMergedState) {
+		chartDataset.data.merged = [];
+	}
 
     let is_same_month = Math.abs(startDate.diff(endDate, "days")) <= 60;
     let unit = "days";
@@ -115,35 +125,42 @@ function PullRequestPage(prop) {
     ) {
       chartDataset.labels.push(date.format(symbol));
 
-      chartDataset.data.open.push(
-        data.filter((pullRequest) => {
-          return (
-            moment(pullRequest.createdAt).format(symbol) ==
-              date.format(symbol) && pullRequest.state == "open"
-          );
-        }).length
-      );
+	  if (chartDataset.data.hasOwnProperty('open')) {
+		chartDataset.data.open.push(
+			data.filter((pullRequest) => {
+			  return (
+				moment(pullRequest.createdAt).format(symbol) ==
+				  date.format(symbol) && pullRequest.state == "open"
+			  );
+			}).length
+		  );
+	  }
 
-      chartDataset.data.closed.push(
-        data.filter((pullRequest) => {
-          return (
-            moment(pullRequest.createdAt).format(symbol) ==
-              date.format(symbol) && pullRequest.state == "closed"
-          );
-        }).length
-      );
+	  if (chartDataset.data.hasOwnProperty('closed')) {
+		chartDataset.data.closed.push(
+			data.filter((pullRequest) => {
+			return (
+				moment(pullRequest.createdAt).format(symbol) ==
+				date.format(symbol) && pullRequest.state == "closed"
+			);
+			}).length
+		);
+	  }
 
-      chartDataset.data.merged.push(
-        data.filter((pullRequest) => {
-          return (
-            moment(pullRequest.mergedAt).format(symbol) ==
-              date.format(symbol) && pullRequest.mergedAt !== null
-          );
-        }).length
-      );
+	  if (chartDataset.data.hasOwnProperty('merged')) {
+		chartDataset.data.merged.push(
+			data.filter((pullRequest) => {
+			  return (
+				moment(pullRequest.mergedAt).format(symbol) ==
+				  date.format(symbol) && pullRequest.mergedAt !== null
+			  );
+			}).length
+		  );
+	  }
+
     }
     setDataForCodeBaseChart(chartDataset);
-  }, [pullRequestListData, prop.startDate, prop.endDate]);
+  }, [pullRequestListData, prop.startDate, prop.endDate, showOpenState, showClosedState, showMergedState]);
 
   return (
     <div style={{ marginLeft: "10px" }}>
@@ -162,15 +179,15 @@ function PullRequestPage(prop) {
             <h1>Team</h1>
             <FormGroup row>
               <FormControlLabel
-                control={<Checkbox checked={true} />}
+                control={<Checkbox checked={showOpenState}  onChange={(e) => {setShowOpenState(e.target.checked);}} />}
                 label="Open"
               />
               <FormControlLabel
-                control={<Checkbox checked={true} />}
+                control={<Checkbox checked={showClosedState} onChange={(e) => setShowClosedState(e.target.checked)} />}
                 label="Closed"
               />
               <FormControlLabel
-                control={<Checkbox checked={true} />}
+                control={<Checkbox checked={showMergedState} onChange={(e) => setShowMergedState(e.target.checked)} />}
                 label="Merged"
               />
             </FormGroup>
