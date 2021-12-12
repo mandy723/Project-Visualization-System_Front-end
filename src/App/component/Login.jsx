@@ -75,6 +75,13 @@ export default function Login() {
           onChange={(e) => {
             setPassword(e.target.value);
           }}
+          onKeyPress={(ev) => {
+            if (ev.key === "Enter") {
+              ev.preventDefault();
+              setPassword(ev.target.value);
+              login();
+            }
+          }}
         />
         <br />
         {/* <button onClick={login} >Login</button> */}
