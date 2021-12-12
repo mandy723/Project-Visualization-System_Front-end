@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import logo_p from './../../p.png'
-import logo_v from './../../v.png'
-import logo_s from './../../s.png'
-import { useHistory } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import logo_p from "./../../p.png";
+import logo_v from "./../../v.png";
+import logo_s from "./../../s.png";
+import { useHistory } from "react-router-dom";
 import {
   ExitToApp,
   ArrowBack,
   ExpandLess,
   ExpandMore,
   Code,
-  GpsFixed
-} from '@material-ui/icons'
+  GpsFixed,
+} from "@material-ui/icons";
 import {
   Drawer,
   List,
@@ -23,31 +23,36 @@ import {
   Divider,
   Collapse,
   Tooltip,
-  IconButton
-} from '@material-ui/core'
-import { AiFillBug } from 'react-icons/ai'
-import { IoGitCommitSharp, IoNuclear } from 'react-icons/io5'
-import { GoIssueOpened } from 'react-icons/go'
-import { GoGitPullRequest } from 'react-icons/go'
-import { HiDocumentDuplicate } from 'react-icons/hi'
-import { SiGithub, SiSonarqube } from 'react-icons/si'
-import { RiDashboardFill } from 'react-icons/ri'
-import clsx from 'clsx'
-import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers'
-import MomentUtils from '@date-io/moment'
-import { makeStyles } from '@material-ui/core/styles'
-import { connect } from 'react-redux'
-import { setStartMonth, setEndMonth, setStartDate, setEndDate } from './../../redux/action'
-import Axios from 'axios'
+  IconButton,
+} from "@material-ui/core";
+import { AiFillBug } from "react-icons/ai";
+import { IoGitCommitSharp, IoNuclear } from "react-icons/io5";
+import { GoIssueOpened } from "react-icons/go";
+import { GoGitPullRequest } from "react-icons/go";
+import { HiDocumentDuplicate } from "react-icons/hi";
+import { SiGithub, SiSonarqube } from "react-icons/si";
+import { RiDashboardFill } from "react-icons/ri";
+import clsx from "clsx";
+import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
+import MomentUtils from "@date-io/moment";
+import { makeStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
+import {
+  setStartMonth,
+  setEndMonth,
+  setStartDate,
+  setEndDate,
+} from "./../../redux/action";
+import Axios from "axios";
 
-const drawerWidth = 240
+const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
+    display: "flex",
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
+    transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
@@ -56,35 +61,35 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 36,
   },
   hide: {
-    display: 'none',
+    display: "none",
   },
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
-    whiteSpace: 'nowrap',
+    whiteSpace: "nowrap",
   },
   drawerOpen: {
     width: drawerWidth,
-    transition: theme.transitions.create('width', {
+    transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
   drawerClose: {
-    transition: theme.transitions.create('width', {
+    transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    overflowX: 'hidden',
+    overflowX: "hidden",
     width: theme.spacing(7) + 1,
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up("sm")]: {
       width: theme.spacing(9) + 1,
     },
   },
   drawerContent: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
     padding: theme.spacing(0, 1),
     ...theme.mixins.toolbar,
   },
@@ -130,49 +135,47 @@ const useStyles = makeStyles((theme) => ({
   // },
   list: {
     width: 200,
-    height: 'calc(100%)',
-    width: 'auto'
+    height: "calc(100%)",
+    width: "auto",
   },
 
   logout: {
-    position: 'absolute',
-    right: 0
+    position: "absolute",
+    right: 0,
   },
   menuList: {
-    height: 'calc(100%)',
+    height: "calc(100%)",
   },
   monthSelector: {
     width: 204,
     padding: theme.spacing(0, 3, 0),
   },
   innerList: {
-    backgroundColor: "#fafafa"
-  }
-}))
+    backgroundColor: "#fafafa",
+  },
+}));
 
 function Sidebar(prop) {
-  //todo seperate sidebar and appbar~~~ 
+  //todo seperate sidebar and appbar~~~
 
-  const [open, setOpen] = useState(true)
-  const history = useHistory()
-  const classes = useStyles()
-  const [currentProject, setCurrentProject] = useState(undefined)
-  const [githubMenuOpen, setGithubMenuOpen] = useState(true)
-  const [sonarMenuOpen, setSonarMenuOpen] = useState(true)
+  const [open, setOpen] = useState(true);
+  const history = useHistory();
+  const classes = useStyles();
+  const [currentProject, setCurrentProject] = useState(undefined);
+  const [githubMenuOpen, setGithubMenuOpen] = useState(true);
+  const [sonarMenuOpen, setSonarMenuOpen] = useState(true);
 
   const list = () => (
-    <div className={classes.list} role="presentation" >
+    <div className={classes.list} role="presentation">
       <List className={classes.menuList} width="inher">
-        {prop.currentProjectId != 0 &&
+        {prop.currentProjectId != 0 && (
           <div>
-
             <ListItem button onClick={goToSelect}>
               <ListItemIcon>
                 <ArrowBack />
               </ListItemIcon>
               <ListItemText primary="Select" />
             </ListItem>
-
 
             <Divider className={classes.divider} />
             <ListItem button onClick={goToDashBoard}>
@@ -184,163 +187,202 @@ function Sidebar(prop) {
             <Divider className={classes.divider} />
 
             {currentProject &&
-              currentProject.repositoryDTOList.find(x => x.type == "github") &&
-              <div>
-                <ListItem button onClick={() => { setGithubMenuOpen(!githubMenuOpen) }}>
-                  <ListItemIcon>
-                    <SiGithub size={30} />
-                  </ListItemIcon>
-                  <ListItemText primary="GitHub" />
-                  {githubMenuOpen ? <ExpandLess /> : <ExpandMore />}
-                </ListItem>
+              currentProject.repositoryDTOList.find(
+                (x) => x.type == "github"
+              ) && (
+                <div>
+                  <ListItem
+                    button
+                    onClick={() => {
+                      setGithubMenuOpen(!githubMenuOpen);
+                    }}
+                  >
+                    <ListItemIcon>
+                      <SiGithub size={30} />
+                    </ListItemIcon>
+                    <ListItemText primary="GitHub" />
+                    {githubMenuOpen ? <ExpandLess /> : <ExpandMore />}
+                  </ListItem>
 
-                <Divider />
-                <Collapse in={githubMenuOpen} timeout="auto" unmountOnExit>
-                  <List component="div" disablePadding className={classes.innerList}>
-                    <ListItem button className={classes.nested} onClick={goToCommit}>
-                      <ListItemIcon>
-                        <IoGitCommitSharp size={24.5} />
-                      </ListItemIcon>
-                      <ListItemText primary="Commits" />
-                    </ListItem>
+                  <Divider />
+                  <Collapse in={githubMenuOpen} timeout="auto" unmountOnExit>
+                    <List
+                      component="div"
+                      disablePadding
+                      className={classes.innerList}
+                    >
+                      <ListItem
+                        button
+                        className={classes.nested}
+                        onClick={goToCommit}
+                      >
+                        <ListItemIcon>
+                          <IoGitCommitSharp size={24.5} />
+                        </ListItemIcon>
+                        <ListItemText primary="Commits" />
+                      </ListItem>
 
-                    <ListItem button className={classes.nested} onClick={goToIssue}>
-                      <ListItemIcon>
-                        <GoIssueOpened size={24.5} />
-                      </ListItemIcon>
-                      <ListItemText primary="Issues" />
-                    </ListItem>
+                      <ListItem
+                        button
+                        className={classes.nested}
+                        onClick={goToIssue}
+                      >
+                        <ListItemIcon>
+                          <GoIssueOpened size={24.5} />
+                        </ListItemIcon>
+                        <ListItemText primary="Issues" />
+                      </ListItem>
 
-                    <ListItem button className={classes.nested} onClick={goToCodeBase}>
-                      <ListItemIcon>
-                        <Code />
-                      </ListItemIcon>
-                      <ListItemText primary="Code Base" />
-                    </ListItem>
+                      <ListItem
+                        button
+                        className={classes.nested}
+                        onClick={goToCodeBase}
+                      >
+                        <ListItemIcon>
+                          <Code />
+                        </ListItemIcon>
+                        <ListItemText primary="Code Base" />
+                      </ListItem>
 
-                    <ListItem button className={classes.nested} onClick={goToPullRequest}>
-                      <ListItemIcon>
-                        <GoGitPullRequest />
-                      </ListItemIcon>
-                      <ListItemText primary="Pull Request" />
-                    </ListItem>
-                  </List>
-                </Collapse>
-              </div>
-            }
+                      <ListItem
+                        button
+                        className={classes.nested}
+                        onClick={goToPullRequest}
+                      >
+                        <ListItemIcon>
+                          <GoGitPullRequest />
+                        </ListItemIcon>
+                        <ListItemText primary="Pull Request" />
+                      </ListItem>
+                    </List>
+                  </Collapse>
+                </div>
+              )}
 
             {currentProject &&
-              currentProject.repositoryDTOList.find(x => x.type == "sonar") &&
-              <div>
-                <Divider className={classes.divider} />
-                <ListItem button onClick={() => { setSonarMenuOpen(!sonarMenuOpen) }} >
-
-                  <ListItemIcon>
-                    <SiSonarqube size={30} />
-                  </ListItemIcon>
-                  <ListItemText primary="SonarQube" />
-                  {sonarMenuOpen ? <ExpandLess /> : <ExpandMore />}
-                </ListItem>
-                <Divider />
-                <Collapse in={sonarMenuOpen} timeout="auto" unmountOnExit>
-                  <List component="div" disablePadding className={classes.innerList}>
-                    <ListItem button onClick={goToCodeCoverage} >
-                      <ListItemIcon>
-                        <GpsFixed />
-                      </ListItemIcon>
-                      <ListItemText primary="Code Coverage" />
-                    </ListItem>
-
-                    <ListItem button onClick={goToBug}>
-                      <ListItemIcon>
-                        <AiFillBug size={24.5} />
-                      </ListItemIcon>
-                      <ListItemText primary="Bugs" />
-                    </ListItem>
-
-                    <ListItem button onClick={goToCodeSmell}>
-                      <ListItemIcon>
-                        <IoNuclear size={24.5} />
-                      </ListItemIcon>
-                      <ListItemText primary="Code Smells" />
-                    </ListItem>
-
-                    <ListItem button onClick={goToDuplication}>
-                      <ListItemIcon>
-                        <HiDocumentDuplicate size={24.5} />
-                      </ListItemIcon>
-                      <ListItemText primary="Duplications" />
-                    </ListItem>
-                  </List>
+              currentProject.repositoryDTOList.find(
+                (x) => x.type == "sonar"
+              ) && (
+                <div>
+                  <Divider className={classes.divider} />
+                  <ListItem
+                    button
+                    onClick={() => {
+                      setSonarMenuOpen(!sonarMenuOpen);
+                    }}
+                  >
+                    <ListItemIcon>
+                      <SiSonarqube size={30} />
+                    </ListItemIcon>
+                    <ListItemText primary="SonarQube" />
+                    {sonarMenuOpen ? <ExpandLess /> : <ExpandMore />}
+                  </ListItem>
                   <Divider />
-                </Collapse>
-              </div>
-            }
+                  <Collapse in={sonarMenuOpen} timeout="auto" unmountOnExit>
+                    <List
+                      component="div"
+                      disablePadding
+                      className={classes.innerList}
+                    >
+                      <ListItem button onClick={goToCodeCoverage}>
+                        <ListItemIcon>
+                          <GpsFixed />
+                        </ListItemIcon>
+                        <ListItemText primary="Code Coverage" />
+                      </ListItem>
+
+                      <ListItem button onClick={goToBug}>
+                        <ListItemIcon>
+                          <AiFillBug size={24.5} />
+                        </ListItemIcon>
+                        <ListItemText primary="Bugs" />
+                      </ListItem>
+
+                      <ListItem button onClick={goToCodeSmell}>
+                        <ListItemIcon>
+                          <IoNuclear size={24.5} />
+                        </ListItemIcon>
+                        <ListItemText primary="Code Smells" />
+                      </ListItem>
+
+                      <ListItem button onClick={goToDuplication}>
+                        <ListItemIcon>
+                          <HiDocumentDuplicate size={24.5} />
+                        </ListItemIcon>
+                        <ListItemText primary="Duplications" />
+                      </ListItem>
+                    </List>
+                    <Divider />
+                  </Collapse>
+                </div>
+              )}
           </div>
-        }
+        )}
       </List>
     </div>
-  )
+  );
 
   const logout = () => {
-    localStorage.clear()
-    history.push('/login')
-  }
+    localStorage.clear();
+    history.push("/login");
+  };
 
   const goToSelect = () => {
-    history.push("/select")
-  }
+    history.push("/select");
+  };
 
   const goToDashBoard = () => {
-    history.push("/dashboard")
-  }
+    history.push("/dashboard");
+  };
 
   const goToCommit = () => {
-    history.push("/commits")
-  }
+    history.push("/commits");
+  };
 
   const goToIssue = () => {
-    history.push("/issues")
-  }
+    history.push("/issues");
+  };
 
   const goToCodeBase = () => {
-    history.push("/codebase")
-  }
+    history.push("/codebase");
+  };
 
   const goToPullRequest = () => {
-    history.push("/pull-requests")
-  }
+    history.push("/pull-requests");
+  };
 
   const goToCodeCoverage = () => {
-    history.push("/code_coverage")
-  }
+    history.push("/code_coverage");
+  };
 
   const goToBug = () => {
-    history.push("/bugs")
-  }
+    history.push("/bugs");
+  };
 
   const goToCodeSmell = () => {
-    history.push("/code_smells")
-  }
+    history.push("/code_smells");
+  };
 
   const goToDuplication = () => {
-    history.push("/duplications")
-  }
+    history.push("/duplications");
+  };
 
-  const jwtToken = localStorage.getItem("jwtToken")
+  const jwtToken = localStorage.getItem("jwtToken");
 
   useEffect(() => {
     if (prop.currentProjectId != 0) {
-      Axios.get(`http://localhost:9100/pvs-api/project/1/${prop.currentProjectId}`,
-        { headers: { "Authorization": `${jwtToken}` } })
+      Axios.get(
+        `http://localhost:9100/pvs-api/project/1/${prop.currentProjectId}`,
+        { headers: { Authorization: `${jwtToken}` } }
+      )
         .then((response) => {
-          setCurrentProject(response.data)
+          setCurrentProject(response.data);
         })
         .catch((error) => {
-          console.error(error)
-        })
+          console.error(error);
+        });
     }
-  }, [prop.currentProjectId])
+  }, [prop.currentProjectId]);
 
   return (
     <div className={classes.root}>
@@ -357,7 +399,8 @@ function Sidebar(prop) {
           <img src={logo_s} />
           <div className={classes.dateSelector}>
             <MuiPickersUtilsProvider utils={MomentUtils}>
-              <DatePicker className={classes.datepicker}
+              <DatePicker
+                className={classes.datepicker}
                 fullWidth
                 format="YYYY-MM-DD"
                 focused={false}
@@ -410,22 +453,22 @@ function Sidebar(prop) {
         {prop.children}
       </main>
     </div>
-  )
+  );
 }
 
 const mapStateToProps = (state) => {
   return {
     startDate: state.selectedDate.startDate,
     endDate: state.selectedDate.endDate,
-    currentProjectId: state.currentProjectId
-  }
-}
+    currentProjectId: state.currentProjectId,
+  };
+};
 
 const mapActionToProps = (dispatch) => {
   return {
     setStartDate: (startDate) => dispatch(setStartDate(startDate)),
-    setEndDate: (endDate) => dispatch(setEndDate(endDate))
-  }
-}
+    setEndDate: (endDate) => dispatch(setEndDate(endDate)),
+  };
+};
 
-export default connect(mapStateToProps, mapActionToProps)(Sidebar)
+export default connect(mapStateToProps, mapActionToProps)(Sidebar);
