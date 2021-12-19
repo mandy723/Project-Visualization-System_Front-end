@@ -94,7 +94,8 @@ function CodeBasePage(prop) {
       return moment(commitListData.committedDate).isBetween(
         startDate,
         endDate,
-        "days"
+        "days",
+        "[]"
       );
     });
     let chartDataset = { labels: [], data: { additions: [], deletions: [] } };

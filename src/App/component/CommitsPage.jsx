@@ -106,7 +106,8 @@ function CommitsPage(prop) {
       return moment(commitListData.committedDate).isBetween(
         startDate,
         endDate,
-        "days"
+        "days",
+        "[]"
       );
     });
 
@@ -148,7 +149,8 @@ function CommitsPage(prop) {
       return moment(commitListData.committedDate).isBetween(
         startDate,
         endDate,
-        "days"
+        "days",
+        "[]"
       );
     });
 

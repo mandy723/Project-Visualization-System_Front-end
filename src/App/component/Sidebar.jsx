@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import logo_p from "./../../p.png";
 import logo_v from "./../../v.png";
 import logo_s from "./../../s.png";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import {
   ExitToApp,
   ArrowBack,
@@ -15,6 +15,7 @@ import {
   Drawer,
   List,
   ListItem,
+  MenuItem,
   ListItemText,
   ListItemIcon,
   CssBaseline,
@@ -164,6 +165,7 @@ function Sidebar(prop) {
   const [currentProject, setCurrentProject] = useState(undefined);
   const [githubMenuOpen, setGithubMenuOpen] = useState(true);
   const [sonarMenuOpen, setSonarMenuOpen] = useState(true);
+  const pathName = useLocation().pathname;
 
   const list = () => (
     <div className={classes.list} role="presentation">
@@ -211,49 +213,53 @@ function Sidebar(prop) {
                       disablePadding
                       className={classes.innerList}
                     >
-                      <ListItem
+                      <MenuItem
                         button
                         className={classes.nested}
                         onClick={goToCommit}
+                        selected={pathName.includes("commits")}
                       >
                         <ListItemIcon>
                           <IoGitCommitSharp size={24.5} />
                         </ListItemIcon>
                         <ListItemText primary="Commits" />
-                      </ListItem>
+                      </MenuItem>
 
-                      <ListItem
+                      <MenuItem
                         button
                         className={classes.nested}
                         onClick={goToIssue}
+                        selected={pathName.includes("issues")}
                       >
                         <ListItemIcon>
                           <GoIssueOpened size={24.5} />
                         </ListItemIcon>
                         <ListItemText primary="Issues" />
-                      </ListItem>
+                      </MenuItem>
 
-                      <ListItem
+                      <MenuItem
                         button
                         className={classes.nested}
                         onClick={goToCodeBase}
+                        selected={pathName.includes("codebase")}
                       >
                         <ListItemIcon>
                           <Code />
                         </ListItemIcon>
                         <ListItemText primary="Code Base" />
-                      </ListItem>
+                      </MenuItem>
 
-                      <ListItem
+                      <MenuItem
                         button
                         className={classes.nested}
                         onClick={goToPullRequest}
+                        selected={pathName.includes("pull-request")}
                       >
                         <ListItemIcon>
                           <GoGitPullRequest />
                         </ListItemIcon>
                         <ListItemText primary="Pull Request" />
-                      </ListItem>
+                      </MenuItem>
                     </List>
                   </Collapse>
                 </div>
@@ -393,10 +399,24 @@ function Sidebar(prop) {
           [classes.appBarShift]: open,
         })}
       >
-        <Toolbar>
-          <img src={logo_p} />
-          <img src={logo_v} />
-          <img src={logo_s} />
+        <Toolbar style={{ padding: "0px" }}>
+          <div
+            variant="permanent"
+            className={clsx(classes.drawer, {
+              [classes.drawerOpen]: open,
+              [classes.drawerClose]: !open,
+            })}
+            classes={{
+              paper: clsx({
+                [classes.drawerOpen]: open,
+                [classes.drawerClose]: !open,
+              }),
+            }}
+          >
+            <img src={logo_p} />
+            <img src={logo_v} />
+            <img src={logo_s} />
+          </div>
           <div className={classes.dateSelector}>
             <MuiPickersUtilsProvider utils={MomentUtils}>
               <DatePicker
