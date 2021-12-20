@@ -99,17 +99,17 @@ function PullRequestPage(prop) {
     });
     let chartDataset = {
       labels: [],
-      data: {}
+      data: {},
     };
-	if (showOpenState) {
-		chartDataset.data.open = [];
-	}
-	if (showClosedState) {
-		chartDataset.data.closed = [];
-	}
-	if (showMergedState) {
-		chartDataset.data.merged = [];
-	}
+    if (showOpenState) {
+      chartDataset.data.open = [];
+    }
+    if (showClosedState) {
+      chartDataset.data.closed = [];
+    }
+    if (showMergedState) {
+      chartDataset.data.merged = [];
+    }
 
     let is_same_month = Math.abs(startDate.diff(endDate, "days")) <= 60;
     let unit = "days";
@@ -125,42 +125,48 @@ function PullRequestPage(prop) {
     ) {
       chartDataset.labels.push(date.format(symbol));
 
-	  if (chartDataset.data.hasOwnProperty('open')) {
-		chartDataset.data.open.push(
-			data.filter((pullRequest) => {
-			  return (
-				moment(pullRequest.createdAt).format(symbol) ==
-				  date.format(symbol) && pullRequest.state == "open"
-			  );
-			}).length
-		  );
-	  }
+      if (chartDataset.data.hasOwnProperty("open")) {
+        chartDataset.data.open.push(
+          data.filter((pullRequest) => {
+            return (
+              moment(pullRequest.createdAt).format(symbol) ==
+                date.format(symbol) && pullRequest.state == "open"
+            );
+          }).length
+        );
+      }
 
-	  if (chartDataset.data.hasOwnProperty('closed')) {
-		chartDataset.data.closed.push(
-			data.filter((pullRequest) => {
-			return (
-				moment(pullRequest.createdAt).format(symbol) ==
-				date.format(symbol) && pullRequest.state == "closed"
-			);
-			}).length
-		);
-	  }
+      if (chartDataset.data.hasOwnProperty("closed")) {
+        chartDataset.data.closed.push(
+          data.filter((pullRequest) => {
+            return (
+              moment(pullRequest.createdAt).format(symbol) ==
+                date.format(symbol) && pullRequest.state == "closed"
+            );
+          }).length
+        );
+      }
 
-	  if (chartDataset.data.hasOwnProperty('merged')) {
-		chartDataset.data.merged.push(
-			data.filter((pullRequest) => {
-			  return (
-				moment(pullRequest.mergedAt).format(symbol) ==
-				  date.format(symbol) && pullRequest.mergedAt !== null
-			  );
-			}).length
-		  );
-	  }
-
+      if (chartDataset.data.hasOwnProperty("merged")) {
+        chartDataset.data.merged.push(
+          data.filter((pullRequest) => {
+            return (
+              moment(pullRequest.mergedAt).format(symbol) ==
+                date.format(symbol) && pullRequest.mergedAt !== null
+            );
+          }).length
+        );
+      }
     }
     setDataForCodeBaseChart(chartDataset);
-  }, [pullRequestListData, prop.startDate, prop.endDate, showOpenState, showClosedState, showMergedState]);
+  }, [
+    pullRequestListData,
+    prop.startDate,
+    prop.endDate,
+    showOpenState,
+    showClosedState,
+    showMergedState,
+  ]);
 
   return (
     <div style={{ marginLeft: "10px" }}>
@@ -179,15 +185,32 @@ function PullRequestPage(prop) {
             <h1>Team</h1>
             <FormGroup row>
               <FormControlLabel
-                control={<Checkbox checked={showOpenState}  onChange={(e) => {setShowOpenState(e.target.checked);}} />}
+                control={
+                  <Checkbox
+                    checked={showOpenState}
+                    onChange={(e) => {
+                      setShowOpenState(e.target.checked);
+                    }}
+                  />
+                }
                 label="Open"
               />
               <FormControlLabel
-                control={<Checkbox checked={showClosedState} onChange={(e) => setShowClosedState(e.target.checked)} />}
+                control={
+                  <Checkbox
+                    checked={showClosedState}
+                    onChange={(e) => setShowClosedState(e.target.checked)}
+                  />
+                }
                 label="Closed"
               />
               <FormControlLabel
-                control={<Checkbox checked={showMergedState} onChange={(e) => setShowMergedState(e.target.checked)} />}
+                control={
+                  <Checkbox
+                    checked={showMergedState}
+                    onChange={(e) => setShowMergedState(e.target.checked)}
+                  />
+                }
                 label="Merged"
               />
             </FormGroup>

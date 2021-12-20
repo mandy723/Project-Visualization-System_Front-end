@@ -30,6 +30,7 @@ import { AiFillBug } from "react-icons/ai";
 import { IoGitCommitSharp, IoNuclear } from "react-icons/io5";
 import { GoIssueOpened } from "react-icons/go";
 import { GoGitPullRequest } from "react-icons/go";
+import { BsFillPieChartFill } from "react-icons/bs";
 import { HiDocumentDuplicate } from "react-icons/hi";
 import { SiGithub, SiSonarqube } from "react-icons/si";
 import { RiDashboardFill } from "react-icons/ri";
@@ -260,6 +261,19 @@ function Sidebar(prop) {
                         </ListItemIcon>
                         <ListItemText primary="Pull Request" />
                       </MenuItem>
+
+                      <MenuItem
+                        button
+                        className={classes.nested}
+                        onClick={goToContributions}
+                        selected={pathName.includes("contributions")}
+                      >
+                        <ListItemIcon>
+                          <BsFillPieChartFill />
+                        </ListItemIcon>
+                        <ListItemText primary="Contributions" />
+                      </MenuItem>
+
                     </List>
                   </Collapse>
                 </div>
@@ -355,6 +369,10 @@ function Sidebar(prop) {
 
   const goToPullRequest = () => {
     history.push("/pull-requests");
+  };
+
+  const goToContributions = () => {
+    history.push("/contributions");
   };
 
   const goToCodeCoverage = () => {
