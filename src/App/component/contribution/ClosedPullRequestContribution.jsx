@@ -51,7 +51,7 @@ const openPullRequestContribution = function Contributions(prop) {
         console.error(e);
       });
   }, []);
-  
+
   useEffect(() => {
     if (Object.keys(currentProject).length != 0) {
       handleToggle();
@@ -75,7 +75,7 @@ const openPullRequestContribution = function Contributions(prop) {
   useEffect(() => {
     let { startDate, endDate } = prop;
     startDate = moment(startDate);
-	
+
     const data = pullRequestListData.filter((pullRequestListData) => {
       return moment(pullRequestListData.createdAt).isBetween(
         startDate,
@@ -84,28 +84,35 @@ const openPullRequestContribution = function Contributions(prop) {
         "[]"
       );
     });
-	const closedPullRequests = data.filter(pullRequest => {
-		return pullRequest.state == "closed";
-	});
+    const closedPullRequests = data.filter((pullRequest) => {
+      return pullRequest.state == "closed";
+    });
 
-	const countData = {};
-	closedPullRequests.forEach((v) =>{
-		if (countData.hasOwnProperty(v.author)) {
-			countData[v.author] = countData[v.author] + 1;
-		} else {
-			countData[v.author] = 1;
-		}
-	});
-	const tmpOpenChart = [];
-	for (const [key, value] of Object.entries(countData)) {
-		tmpOpenChart.push({label:key, data:value});
-	}
-	setOpenChart(tmpOpenChart);
-
+    const countData = {};
+    closedPullRequests.forEach((v) => {
+      if (countData.hasOwnProperty(v.author)) {
+        countData[v.author] = countData[v.author] + 1;
+      } else {
+        countData[v.author] = 1;
+      }
+    });
+    const tmpOpenChart = [];
+    for (const [key, value] of Object.entries(countData)) {
+      window.pieLabel.push(key);
+      tmpOpenChart.push({ label: key, data: value });
+    }
+    setOpenChart(tmpOpenChart);
   }, [pullRequestListData, prop.startDate, prop.endDate]);
 
-  return <div><div align="center"><h2>Closed Pull Request</h2></div><DrawingPieBoard data={openChart} /></div>
-}
+  return (
+    <div>
+      <div align="center">
+        <h2>Closed Pull Request</h2>
+      </div>
+      <DrawingPieBoard data={openChart} />
+    </div>
+  );
+};
 
 const mapStateToProps = (state) => {
   return {
@@ -114,4 +121,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(openPullRequestContribution)
+export default connect(mapStateToProps)(openPullRequestContribution);

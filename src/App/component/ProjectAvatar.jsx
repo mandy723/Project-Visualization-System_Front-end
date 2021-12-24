@@ -11,9 +11,11 @@ import {
 import GitHubIcon from "@material-ui/icons/GitHub";
 import GpsFixedIcon from "@material-ui/icons/GpsFixed";
 import AddIcon from "@material-ui/icons/Add";
+import CloseIcon from "@material-ui/icons/Close";
 import AddRepositoryDialog from "./AddRepositoryDialog";
 import { connect } from "react-redux";
 import { setCurrentProjectId } from "../../redux/action";
+import ShowButtonHover from "./ShowButtonHover";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -77,6 +79,14 @@ function ProjectAvatar(props) {
     history.push("/code_coverage");
   };
 
+  const goToCloseProject = (e) => {
+    // localStorage.setItem("projectId", props.project.projectId);
+    // props.setCurrentProjectId(props.project.projectId);
+    // history.push("/dashboard");
+    e.stopPropagation();
+    alert("刪除專案");
+  };
+
   const goToDashboard = () => {
     localStorage.setItem("projectId", props.project.projectId);
     props.setCurrentProjectId(props.project.projectId);
@@ -87,10 +97,34 @@ function ProjectAvatar(props) {
     setAddRepoDialogOpen(true);
   };
 
+  const [closeStyle, setCloseStyle] = useState({ display: "none" });
+  
+
   return (
     <div>
       <Box className={props.size === "large" ? classes.large : classes.small}>
-        <CardActionArea onClick={goToDashboard}>
+        <CardActionArea
+          onClick={goToDashboard}
+          onMouseEnter={(e) => {
+            console.log("@@");
+            e.preventDefault();
+            
+            setCloseStyle({ display: "block" });
+          }}
+          onMouseLeave={(e) => {
+            console.log("$$");
+            e.preventDefault();
+            setCloseStyle({ display: "none" });
+          }}
+        >
+          <IconButton
+            aria-label="Close"
+            style={closeStyle}
+            onClick={(e) => goToCloseProject(e)}
+          >
+            <CloseIcon />
+          </IconButton>
+
           <Avatar
             alt="first repository"
             src={props.project.avatarURL}

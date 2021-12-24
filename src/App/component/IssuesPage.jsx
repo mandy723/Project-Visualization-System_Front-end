@@ -91,37 +91,37 @@ function IssuesPage(prop) {
 
     issueListDataSortedByCreatedAt.sort((a, b) => a.createdAt - b.createdAt);
     issueListDataSortedByClosedAt.sort((a, b) => a.closedAt - b.closedAt);
-    if (issueListDataSortedByCreatedAt.length > 0) {
-      let is_same_month = Math.abs(startDate.diff(endDate, "days")) <= 60;
-      let unit = "days";
-      let symbol = "YYYY-MM-DD";
-      if (!is_same_month) {
-        unit = "month";
-        symbol = "YYYY-MM";
-      }
-      for (
-        let date = moment(startDate);
-        date.isSameOrBefore(endDate, unit);
-        date = date.add(1, unit)
-      ) {
-        let index;
-        chartDataset.labels.push(date.format(symbol));
 
-        index = issueListDataSortedByCreatedAt.findIndex((issue) => {
-          return date.isBefore(issue.createdAt, unit);
-        });
-        chartDataset.data.created.push(
-          index == -1 ? issueListDataSortedByCreatedAt.length : index
-        );
-
-        index = issueListDataSortedByClosedAt.findIndex((issue) => {
-          return date.isBefore(issue.closedAt, unit);
-        });
-        chartDataset.data.closed.push(
-          index == -1 ? issueListDataSortedByClosedAt.length : index
-        );
-      }
+    let is_same_month = Math.abs(startDate.diff(endDate, "days")) <= 60;
+    let unit = "days";
+    let symbol = "YYYY-MM-DD";
+    if (!is_same_month) {
+      unit = "month";
+      symbol = "YYYY-MM";
     }
+    for (
+      let date = moment(startDate);
+      date.isSameOrBefore(endDate, unit);
+      date = date.add(1, unit)
+    ) {
+      let index;
+      chartDataset.labels.push(date.format(symbol));
+
+      index = issueListDataSortedByCreatedAt.findIndex((issue) => {
+        return date.isBefore(issue.createdAt, unit);
+      });
+      chartDataset.data.created.push(
+        index == -1 ? issueListDataSortedByCreatedAt.length : index
+      );
+
+      index = issueListDataSortedByClosedAt.findIndex((issue) => {
+        return date.isBefore(issue.closedAt, unit);
+      });
+      chartDataset.data.closed.push(
+        index == -1 ? issueListDataSortedByClosedAt.length : index
+      );
+    }
+
     setDataForIssueChart(chartDataset);
   }, [issueListData]);
 

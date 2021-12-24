@@ -88,7 +88,8 @@ const commitContribution = function Contributions(prop) {
 	});
 	const tmpChart = [];
 	for (const [key, value] of Object.entries(countData)) {
-		let label = key.replace('"', '');
+		let label = key.replaceAll('"', '');
+    window.pieLabel.push(label)
 		tmpChart.push({label:label, data: value});
 	}
 	setChart(tmpChart);
