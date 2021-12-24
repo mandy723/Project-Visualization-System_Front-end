@@ -98,6 +98,7 @@ const openPullRequestContribution = function Contributions(prop) {
 	const tmpOpenChart = [];
 	for (const [key, value] of Object.entries(countData)) {
 		tmpOpenChart.push({label:key, data:value});
+    window.pieLabel.push(key)
 	}
 	setOpenChart(tmpOpenChart);
 

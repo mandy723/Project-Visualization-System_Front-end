@@ -7,12 +7,11 @@ import MergedPullRequestContribution from "./contribution/MergedPullRequestContr
 import CodeBaseContribution from "./contribution/CodeBaseContribution";
 import CommitContribution from "./contribution/CommitContribution";
 import CommentContribution from "./contribution/CommentContribution";
+import LabelList from "./contribution/LabelList";
 import Axios from "axios";
 import moment from "moment";
-import {
-  CircularProgress,
-  Backdrop,
-} from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
+import { CircularProgress, Backdrop } from "@material-ui/core";
 import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
@@ -65,7 +64,7 @@ function Contributions(prop) {
         console.error(e);
       });
   }, []);
-  
+
   useEffect(() => {
     if (Object.keys(currentProject).length != 0) {
       handleToggle();
@@ -99,31 +98,37 @@ function Contributions(prop) {
       );
     });
 
-	const openPullRequests = data.filter(pullRequest => {
-		return pullRequest.state == "open";
-	});
-	const closedPullRequests = data.filter(pullRequest => {
-		return pullRequest.state == "closed";
-	});
-	const mergedPullRequests = data.filter(pullRequest => {
-		return pullRequest.state == "closed" &&  pullRequest.mergedAt !== null;
-	});
+    const openPullRequests = data.filter((pullRequest) => {
+      return pullRequest.state == "open";
+    });
+    const closedPullRequests = data.filter((pullRequest) => {
+      return pullRequest.state == "closed";
+    });
+    const mergedPullRequests = data.filter((pullRequest) => {
+      return pullRequest.state == "closed" && pullRequest.mergedAt !== null;
+    });
 
-	const countData = {};
-	openPullRequests.forEach((v) =>{
-		if (countData.hasOwnProperty(v.author)) {
-			countData[v.author] = countData[v.author] + 1;
-		} else {
-			countData[v.author] = 1;
-		}
-	});
-	const tmpOpenChart = [];
-	for (const [key, value] of Object.entries(countData)) {
-		tmpOpenChart.push({label:key, data:value});
-	}
-	setOpenChart(tmpOpenChart);
-
-  }, [pullRequestListData, prop.startDate, prop.endDate, showOpenState, showClosedState, showMergedState]);
+    const countData = {};
+    openPullRequests.forEach((v) => {
+      if (countData.hasOwnProperty(v.author)) {
+        countData[v.author] = countData[v.author] + 1;
+      } else {
+        countData[v.author] = 1;
+      }
+    });
+    const tmpOpenChart = [];
+    for (const [key, value] of Object.entries(countData)) {
+      tmpOpenChart.push({ label: key, data: value });
+    }
+    setOpenChart(tmpOpenChart);
+  }, [
+    pullRequestListData,
+    prop.startDate,
+    prop.endDate,
+    showOpenState,
+    showClosedState,
+    showMergedState,
+  ]);
 
   return (
     <div style={{ marginLeft: "10px" }}>
@@ -137,28 +142,38 @@ function Contributions(prop) {
         </p>
       </div>
       <div className={classes.root}>
-        <div style={{ width: "67%" }}>
+        <div style={{ width: "100%" }}>
           <div>
+            <LabelList />
             <h1>Team</h1>
-            <div>
-              <OpenPullRequestContribution/>
-            </div>
-			<div>
-              <ClosedPullRequestContribution />
-            </div>
-			<div>
-              <MergedPullRequestContribution/>
-            </div>
-			<div>
-              <CodeBaseContribution/>
-            </div>
-			<div>
-              <CommitContribution/>
-            </div>
-			<div>
-              <CommentContribution/>
-            </div>
-			
+            <Grid container spacing={1}>
+              <Grid container item xs={12} spacing={3}>
+                <React.Fragment>
+                  <Grid item xs={4}>
+                    <OpenPullRequestContribution />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <ClosedPullRequestContribution />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <MergedPullRequestContribution />
+                  </Grid>
+                </React.Fragment>
+              </Grid>
+              <Grid container item xs={12} spacing={3}>
+                <React.Fragment>
+                  <Grid item xs={4}>
+                    <CodeBaseContribution />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <CommitContribution />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <CommentContribution />
+                  </Grid>
+                </React.Fragment>
+              </Grid>
+            </Grid>
           </div>
         </div>
       </div>
