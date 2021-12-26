@@ -1,34 +1,38 @@
 import React, { useState } from "react";
 import CloseIcon from "@material-ui/icons/Close";
-import {
-    IconButton,
-  } from "@material-ui/core";
+import { IconButton } from "@material-ui/core";
 
-export default function ShowButtonHover() {
+export default function ShowButtonHover({ closeStyle }) {
   const [style, setStyle] = useState({ display: "none" });
 
+  const goToCloseProject = (e) => {
+    // localStorage.setItem("projectId", props.project.projectId);
+    // props.setCurrentProjectId(props.project.projectId);
+    // history.push("/dashboard");
+    e.stopPropagation();
+    alert("刪除專案");
+  };
+
   return (
-    <div>
-      {/* <h2>Hidden Button in the box. Move mouse in the box</h2> */}
+    <div
+      style={{
+        width: 200,
+        height: 48,
+      }}
+    >
       <div
         style={{
-          //   border: "1px solid gray",
-          width: 20,
-          height: 10,
-          padding: 10,
-          margin: 10,
-          //   float: right,
-        }}
-        onMouseEnter={(e) => {
-          setStyle({ display: "block" });
-        }}
-        onMouseLeave={(e) => {
-          setStyle({ display: "none" });
+          width: 48,
+          height: 48,
+          float: "right",
         }}
       >
-        {/* <button >Click</button>   onClick={}*/}
-        <IconButton aria-label="GitHub" >
-          <CloseIcon style={style} />
+        <IconButton
+          aria-label="Close"
+          style={closeStyle}
+          onClick={goToCloseProject}
+        >
+          <CloseIcon />
         </IconButton>
       </div>
     </div>
