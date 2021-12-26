@@ -98,7 +98,6 @@ function ProjectAvatar(props) {
   };
 
   const [closeStyle, setCloseStyle] = useState({ display: "none" });
-  
 
   return (
     <div>
@@ -106,24 +105,22 @@ function ProjectAvatar(props) {
         <CardActionArea
           onClick={goToDashboard}
           onMouseEnter={(e) => {
-            console.log("@@");
-            e.preventDefault();
-            
             setCloseStyle({ display: "block" });
           }}
           onMouseLeave={(e) => {
-            console.log("$$");
-            e.preventDefault();
             setCloseStyle({ display: "none" });
           }}
         >
-          <IconButton
+          {/* <IconButton
             aria-label="Close"
             style={closeStyle}
-            onClick={(e) => goToCloseProject(e)}
+            onClick={goToCloseProject}
           >
             <CloseIcon />
-          </IconButton>
+          </IconButton> */}
+          {props.size === "large" && (
+            <ShowButtonHover closeStyle={closeStyle} />
+          )}
 
           <Avatar
             alt="first repository"
