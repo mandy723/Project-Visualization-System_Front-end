@@ -69,6 +69,7 @@ export default function DrawingBoard(props) {
       display: true,
       labels: {
         boxWidth: 10,
+        fontSize: 16,
       },
     },
     scales: {

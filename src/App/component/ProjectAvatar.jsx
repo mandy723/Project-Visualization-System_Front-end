@@ -79,14 +79,6 @@ function ProjectAvatar(props) {
     history.push("/code_coverage");
   };
 
-  const goToCloseProject = (e) => {
-    // localStorage.setItem("projectId", props.project.projectId);
-    // props.setCurrentProjectId(props.project.projectId);
-    // history.push("/dashboard");
-    e.stopPropagation();
-    alert("刪除專案");
-  };
-
   const goToDashboard = () => {
     localStorage.setItem("projectId", props.project.projectId);
     props.setCurrentProjectId(props.project.projectId);
@@ -111,15 +103,9 @@ function ProjectAvatar(props) {
             setCloseStyle({ display: "none" });
           }}
         >
-          {/* <IconButton
-            aria-label="Close"
-            style={closeStyle}
-            onClick={goToCloseProject}
-          >
-            <CloseIcon />
-          </IconButton> */}
+         
           {props.size === "large" && (
-            <ShowButtonHover closeStyle={closeStyle} />
+            <ShowButtonHover closeStyle={closeStyle} projectId={props.project.projectId}/>
           )}
 
           <Avatar
