@@ -156,6 +156,7 @@ function CommitsPage(prop) {
 
     new Set(commitListData.map((commit) => commit.authorName)).forEach(
       (author) => {
+        author = author.replaceAll('"', "")
         chartDataset.data[author] = [];
       }
     );
@@ -181,7 +182,8 @@ function CommitsPage(prop) {
         if (
           moment(commitData.committedDate).format(symbol) == date.format(symbol)
         ) {
-          chartDataset.data[commitData.authorName][
+          const authorName = commitData.authorName.replaceAll('"', "")
+          chartDataset.data[authorName][
             chartDataset.labels.length - 1
           ] += 1;
         }

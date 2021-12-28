@@ -14,7 +14,7 @@ export default function DrawingPieBoard(props) {
       },
     ],
   };
-  
+
   props.data.forEach((chart) => {
     const color = window.getColorByName(chart.label);
     data.labels.push(chart.label);
@@ -24,15 +24,26 @@ export default function DrawingPieBoard(props) {
   });
 
   if (data.labels.length == 0) {
-    data.labels.push("無資料");
     data.datasets[0].data.push(1);
     data.datasets[0].backgroundColor.push("rgba(200, 200, 200, 0.2)");
-    data.datasets[0].borderColor.push("rgba(200, 200, 200, 0.2)");
+    data.datasets[0].borderColor.push("rgba(255, 255, 255, 0)");
   }
 
   const options = {
     legend: {
       display: false,
+    },
+    tooltips: {
+      callbacks: {
+        label: function (tooltipItem, data) {
+          var label = data.labels[tooltipItem.datasetIndex] || null;
+          if (label) {
+            label += ": ";
+            label += data.datasets[0].data[tooltipItem.datasetIndex];
+          }
+          return label || "無資料";
+        },
+      },
     },
   };
 

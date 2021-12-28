@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import CloseIcon from "@material-ui/icons/Close";
 import { IconButton } from "@material-ui/core";
+import Axios from "axios";
 
-export default function ShowButtonHover({ closeStyle }) {
-  const [style, setStyle] = useState({ display: "none" });
-
-  const goToCloseProject = (e) => {
-    // localStorage.setItem("projectId", props.project.projectId);
-    // props.setCurrentProjectId(props.project.projectId);
-    // history.push("/dashboard");
+export default function ShowButtonHover({ closeStyle, projectId }) {
+  const removeProject = (e) => {
     e.stopPropagation();
-    alert("刪除專案");
+    const jwtToken = localStorage.getItem("jwtToken");
+    if (window.confirm("是否刪除此專案?") == true) {
+      Axios.delete(`http://localhost:9100/pvs-api/project/${projectId}`, {
+        headers: { Authorization: `${jwtToken}` },
+      }).then(() => {
+        window.location.reload();
+      });
+    }
   };
 
   return (
@@ -30,7 +33,7 @@ export default function ShowButtonHover({ closeStyle }) {
         <IconButton
           aria-label="Close"
           style={closeStyle}
-          onClick={goToCloseProject}
+          onClick={removeProject}
         >
           <CloseIcon />
         </IconButton>

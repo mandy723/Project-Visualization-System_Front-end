@@ -144,8 +144,11 @@ function Contributions(prop) {
       <div className={classes.root}>
         <div style={{ width: "100%" }}>
           <div>
-            <LabelList />
-            <h1>Team</h1>
+            <h1>Member</h1>
+            <div align="center">
+              <LabelList />
+            </div>
+
             <Grid container spacing={1}>
               <Grid container item xs={12} spacing={3}>
                 <React.Fragment>
