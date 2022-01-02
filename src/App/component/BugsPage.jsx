@@ -65,7 +65,7 @@ function BugsPage(prop) {
       );
       let sonarComponent = repositoryDTO.url.split("id=")[1];
       setBugUrl(
-        `http://140.124.181.143:9000/project/issues?id=${sonarComponent}&resolved=false&types=BUG`
+        `http://localhost:9000/project/issues?id=${sonarComponent}&resolved=false&types=BUG`
       );
       Axios.get(`http://localhost:9100/pvs-api/sonar/${sonarComponent}/bug`, {
         headers: { Authorization: `${jwtToken}` },

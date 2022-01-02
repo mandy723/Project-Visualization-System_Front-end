@@ -63,7 +63,7 @@ function CodeSmellsPage(prop) {
       );
       let sonarComponent = repositoryDTO.url.split("id=")[1];
       setCodeSmellUrl(
-        `http://140.124.181.143:9000/project/issues?id=${sonarComponent}&resolved=false&types=CODE_SMELL`
+        `http://localhost:9000/project/issues?id=${sonarComponent}&resolved=false&types=CODE_SMELL`
       );
       Axios.get(
         `http://localhost:9100/pvs-api/sonar/${sonarComponent}/code_smell`,

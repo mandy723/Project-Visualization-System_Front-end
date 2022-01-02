@@ -63,7 +63,7 @@ function DuplicationsPage(prop) {
       );
       let sonarComponent = repositoryDTO.url.split("id=")[1];
       setDuplicationUrl(
-        `http://140.124.181.143:9000/component_measures?id=${sonarComponent}&metric=Duplications&view=list`
+        `http://localhost:9000/component_measures?id=${sonarComponent}&metric=Duplications&view=list`
       );
       Axios.get(
         `http://localhost:9100/pvs-api/sonar/${sonarComponent}/duplication`,

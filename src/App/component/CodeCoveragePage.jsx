@@ -62,7 +62,7 @@ function CodeCoveragePage(prop) {
       );
       let sonarComponent = repositoryDTO.url.split("id=")[1];
       setCoverageUrl(
-        `http://140.124.181.143:9000/component_measures?id=${sonarComponent}&metric=Coverage&view=list`
+        `http://localhost:9000/component_measures?id=${sonarComponent}&metric=Coverage&view=list`
       );
       Axios.get(
         `http://localhost:9100/pvs-api/sonar/${sonarComponent}/coverage`,
