@@ -11,7 +11,6 @@ import {
 import GitHubIcon from "@material-ui/icons/GitHub";
 import GpsFixedIcon from "@material-ui/icons/GpsFixed";
 import AddIcon from "@material-ui/icons/Add";
-import CloseIcon from "@material-ui/icons/Close";
 import AddRepositoryDialog from "./AddRepositoryDialog";
 import { connect } from "react-redux";
 import { setCurrentProjectId } from "../../redux/action";

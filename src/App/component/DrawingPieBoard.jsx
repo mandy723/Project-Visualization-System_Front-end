@@ -36,10 +36,10 @@ export default function DrawingPieBoard(props) {
     tooltips: {
       callbacks: {
         label: function (tooltipItem, data) {
-          var label = data.labels[tooltipItem.datasetIndex] || null;
+          var label = data.labels[tooltipItem.index] || null;
           if (label) {
             label += ": ";
-            label += data.datasets[0].data[tooltipItem.datasetIndex];
+            label += data.datasets[0].data[tooltipItem.index];
           }
           return label || "無資料";
         },

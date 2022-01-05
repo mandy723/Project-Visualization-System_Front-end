@@ -23,10 +23,10 @@ const useStyles = makeStyles((theme) => ({
   },
   large: {
     width: theme.spacing(20),
-    height: theme.spacing(25),
+    height: theme.spacing(40),
   },
   createProjectCard: {
-    height: theme.spacing(25),
+    height: theme.spacing(40),
   },
 }));
 

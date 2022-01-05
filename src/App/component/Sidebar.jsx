@@ -285,7 +285,7 @@ function Sidebar(prop) {
               ) && (
                 <div>
                   <Divider className={classes.divider} />
-                  <ListItem
+                  <MenuItem
                     button
                     onClick={() => {
                       setSonarMenuOpen(!sonarMenuOpen);
@@ -296,7 +296,7 @@ function Sidebar(prop) {
                     </ListItemIcon>
                     <ListItemText primary="SonarQube" />
                     {sonarMenuOpen ? <ExpandLess /> : <ExpandMore />}
-                  </ListItem>
+                  </MenuItem>
                   <Divider />
                   <Collapse in={sonarMenuOpen} timeout="auto" unmountOnExit>
                     <List
@@ -304,33 +304,33 @@ function Sidebar(prop) {
                       disablePadding
                       className={classes.innerList}
                     >
-                      <ListItem button onClick={goToCodeCoverage}>
+                      <MenuItem button onClick={goToCodeCoverage} selected={pathName.includes("code_coverage")}>
                         <ListItemIcon>
                           <GpsFixed />
                         </ListItemIcon>
                         <ListItemText primary="Code Coverage" />
-                      </ListItem>
+                      </MenuItem>
 
-                      <ListItem button onClick={goToBug}>
+                      <MenuItem button onClick={goToBug} selected={pathName.includes("bugs")}>
                         <ListItemIcon>
                           <AiFillBug size={24.5} />
                         </ListItemIcon>
                         <ListItemText primary="Bugs" />
-                      </ListItem>
+                      </MenuItem>
 
-                      <ListItem button onClick={goToCodeSmell}>
+                      <MenuItem button onClick={goToCodeSmell} selected={pathName.includes("code_smells")}>
                         <ListItemIcon>
                           <IoNuclear size={24.5} />
                         </ListItemIcon>
                         <ListItemText primary="Code Smells" />
-                      </ListItem>
+                      </MenuItem>
 
-                      <ListItem button onClick={goToDuplication}>
+                      <MenuItem button onClick={goToDuplication} selected={pathName.includes("duplications")}>
                         <ListItemIcon>
                           <HiDocumentDuplicate size={24.5} />
                         </ListItemIcon>
                         <ListItemText primary="Duplications" />
-                      </ListItem>
+                      </MenuItem>
                     </List>
                     <Divider />
                   </Collapse>
