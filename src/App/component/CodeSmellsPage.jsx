@@ -81,8 +81,20 @@ function CodeSmellsPage(prop) {
 
   useEffect(() => {
     let chartDataset = { labels: [], data: { codeSmell: [] } };
+    let { startDate, endDate } = prop;
+    startDate = moment(startDate);
+    endDate = moment(endDate);
 
-    codeSmellList.forEach((codeSmell) => {
+    const list = codeSmellList.filter((codeSmellList) => {
+      return moment(codeSmellList.date).isBetween(
+        startDate,
+        endDate,
+        "days",
+        "[]"
+      );
+    });
+    
+    list.forEach((codeSmell) => {
       chartDataset.labels.push(
         moment(codeSmell.date).format("YYYY-MM-DD HH:mm:ss")
       );
@@ -91,7 +103,7 @@ function CodeSmellsPage(prop) {
 
     setDataForCodeSmellChart(chartDataset);
     handleClose();
-  }, [codeSmellList, prop.startMonth, prop.endMonth]);
+  }, [codeSmellList, prop.startMonth, prop.endMonth, prop.startDate, prop.endDate]);
 
   return (
     <div style={{ marginLeft: "10px" }}>
@@ -125,7 +137,7 @@ function CodeSmellsPage(prop) {
               <DrawingBoard
                 data={dataForCodeSmellChart}
                 maxBoardY={
-                  Math.max(...dataForCodeSmellChart.data.codeSmell) + 5
+                  (Math.max(...dataForCodeSmellChart.data.codeSmell, 0) + 5)
                 }
                 id="code-smells-chart"
               />
@@ -141,6 +153,8 @@ const mapStateToProps = (state) => {
   return {
     startMonth: state.selectedMonth.startMonth,
     endMonth: state.selectedMonth.endMonth,
+    startDate: state.selectedDate.startDate,
+    endDate: state.selectedDate.endDate,
   };
 };
 

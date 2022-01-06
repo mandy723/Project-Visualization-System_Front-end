@@ -82,15 +82,27 @@ function BugsPage(prop) {
 
   useEffect(() => {
     let chartDataset = { labels: [], data: { bug: [] } };
+    let { startDate, endDate } = prop;
+    startDate = moment(startDate);
+    endDate = moment(endDate);
 
-    bugList.forEach((bug) => {
+    const list = bugList.filter((bugList) => {
+      return moment(bugList.date).isBetween(
+        startDate,
+        endDate,
+        "days",
+        "[]"
+      );
+    });
+
+    list.forEach((bug) => {
       chartDataset.labels.push(moment(bug.date).format("YYYY-MM-DD HH:mm:ss"));
       chartDataset.data.bug.push(bug.value);
     });
 
     setDataForBugChart(chartDataset);
     handleClose();
-  }, [bugList, prop.startMonth, prop.endMonth]);
+  }, [bugList, prop.startMonth, prop.endMonth, prop.startDate, prop.endDate]);
 
   return (
     <div style={{ marginLeft: "10px" }}>
@@ -117,7 +129,7 @@ function BugsPage(prop) {
             <div>
               <DrawingBoard
                 data={dataForBugChart}
-                maxBoardY={Math.max(...dataForBugChart.data.bug) + 5}
+                maxBoardY={Math.max(...dataForBugChart.data.bug, 0) + 5}
                 id="bugs-chart"
               />
             </div>
@@ -132,6 +144,8 @@ const mapStateToProps = (state) => {
   return {
     startMonth: state.selectedMonth.startMonth,
     endMonth: state.selectedMonth.endMonth,
+    startDate: state.selectedDate.startDate,
+    endDate: state.selectedDate.endDate,
   };
 };
 

@@ -81,8 +81,20 @@ function DuplicationsPage(prop) {
 
   useEffect(() => {
     let chartDataset = { labels: [], data: { duplication: [] } };
+    let { startDate, endDate } = prop;
+    startDate = moment(startDate);
+    endDate = moment(endDate);
 
-    duplicationList.forEach((duplication) => {
+    const list = duplicationList.filter((duplicationList) => {
+      return moment(duplicationList.date).isBetween(
+        startDate,
+        endDate,
+        "days",
+        "[]"
+      );
+    });
+
+    list.forEach((duplication) => {
       chartDataset.labels.push(
         moment(duplication.date).format("YYYY-MM-DD HH:mm:ss")
       );
@@ -91,7 +103,7 @@ function DuplicationsPage(prop) {
 
     setDataForDuplicationChart(chartDataset);
     handleClose();
-  }, [duplicationList, prop.startMonth, prop.endMonth]);
+  }, [duplicationList, prop.startMonth, prop.endMonth, prop.startDate, prop.endDate]);
 
   return (
     <div style={{ marginLeft: "10px" }}>
@@ -140,6 +152,8 @@ const mapStateToProps = (state) => {
   return {
     startMonth: state.selectedMonth.startMonth,
     endMonth: state.selectedMonth.endMonth,
+    startDate: state.selectedDate.startDate,
+    endDate: state.selectedDate.endDate,
   };
 };
 

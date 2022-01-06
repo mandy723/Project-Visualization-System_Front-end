@@ -80,8 +80,19 @@ function CodeCoveragePage(prop) {
 
   useEffect(() => {
     let chartDataset = { labels: [], data: { coverage: [] } };
+    let { startDate, endDate } = prop;
+    startDate = moment(startDate);
+    endDate = moment(endDate);
 
-    coverageList.forEach((coverage) => {
+    const list = coverageList.filter((coverageList) => {
+      return moment(coverageList.date).isBetween(
+        startDate,
+        endDate,
+        "days",
+        "[]"
+      );
+    });
+    list.forEach((coverage) => {
       chartDataset.labels.push(
         moment(coverage.date).format("YYYY-MM-DD HH:mm:ss")
       );
@@ -89,7 +100,7 @@ function CodeCoveragePage(prop) {
     });
     setDataForCoverageChart(chartDataset);
     handleClose();
-  }, [coverageList, prop.startMonth, prop.endMonth]);
+  }, [coverageList, prop.startMonth, prop.endMonth, prop.startDate, prop.endDate]);
 
   return (
     <div style={{ marginLeft: "10px" }}>
@@ -110,7 +121,7 @@ function CodeCoveragePage(prop) {
         <a href={coverageUrl} target="blank">
           {
             dataForCoverageChart.data.coverage[
-              dataForCoverageChart.data.coverage.length - 1
+            dataForCoverageChart.data.coverage.length - 1
             ]
           }
           %
@@ -138,6 +149,8 @@ const mapStateToProps = (state) => {
   return {
     startMonth: state.selectedMonth.startMonth,
     endMonth: state.selectedMonth.endMonth,
+    startDate: state.selectedDate.startDate,
+    endDate: state.selectedDate.endDate,
   };
 };
 
