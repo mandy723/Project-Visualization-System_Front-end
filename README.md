@@ -1,5 +1,6 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The front end of [PVS_Backend](https://github.com/mandy723/Project-Visualization-System_Backend.git) visualized the activity of GitHub repositories and SonarQube code quality inspection data to provide users with a unified platform to track the project's status.
 
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 ## Available Scripts
 
 In the project directory, you can run:
